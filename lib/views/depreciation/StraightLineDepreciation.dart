@@ -4,6 +4,8 @@ import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+
+import '../../db/DealWithDataBase.dart';
 Future<void> main() async {
 
   runApp(StriaghtLineDep());
@@ -60,7 +62,11 @@ class StriaghtLineDep extends StatelessWidget {
               const SizedBox(height: 20), // Add spacing between text bars and labels
               ElevatedButton(
                 onPressed: () {
+                  final DatabaseHelper dbHelper = DatabaseHelper();
+
+                  dbHelper.updateSettingsValueKey("pic-quality-after-comp",originalCostController.text);
                   // Add your button functionality here
+                  dbHelper.logAllSettingsStoredInDB();
                   calculator(originalCostController, salvageValueController, usefulLifeController);
                 },
                 child: const Text('Submit'),

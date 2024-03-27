@@ -5,35 +5,36 @@ import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:flutter/widgets.dart';
 
-import 'db/addingnewuser.dart';
-Future main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  final Future <Database> database = openDatabase(join(await getDatabasesPath(),'gg_database.db'),onCreate: (db,version){
-    return db.execute("CREATE TABLE users(id INTEGER PRIMARY KEY,name TEXT, age INTEGER)");
-  },version: 1);
-  Future<void> insertUser(User user)async {
-    final Database db = await database ;
-    await db.insert("users", user.toMap(),conflictAlgorithm: ConflictAlgorithm.replace);
-  }
-  Future <List<User>> users()async{
-    final Database db = await database;
-    final List <Map<String,dynamic>> maps = await db.query("users");
-    return List.generate(maps.length, (index) => User(id: maps[index]['id'], name: maps[index]['name'], age: maps[index]['age']));
+import 'db/DealWithDataBase.dart';
+import 'db/addingnewuserobject.dart';
+import 'db/appsettingsobject.dart';
 
-  }
+Future<void> checkDataBaseForTheFirstTime () async {
+  ///will checkout the database and find-out if the first time open it will insert these settings
+  final DatabaseHelper dbHelper = DatabaseHelper();
 
-  Future<void> updateUser(User user)async {
-    final Database db = await database ;
-    await db.update('users', user.toMap(),
-    where: "id = ?",
-      whereArgs: [user.id]
-    );
+  // Initialize settings table
+  await dbHelper.initializeDatabase();
 
-  }
+  List<Map<String, dynamic>>? themeValue = await dbHelper.getSettingValueByKey("delete-main-file");
+  print(themeValue);
+
+
+  // Retrieve all settings
+  List<Settings> allSettings = await dbHelper.getAllSettings();
+
+  allSettings.forEach((element) {
+    print(element);
+  });
 
   var ramez = User(id: 00, name: 'ramez', age: 22);
-  await insertUser(ramez);
-  print(await users());
+  await dbHelper.insertUser(ramez);
+  print(await dbHelper.users());
+
+}
+Future main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  checkDataBaseForTheFirstTime();
 
   runApp(const App());
 }
