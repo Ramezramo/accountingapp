@@ -1,10 +1,13 @@
 
+// import 'package:accountingapp/views/depreciation/straitLineDepObject.dart';
+import 'package:accountingapp/views/straitlinedepreciation/straitLineDepObject.dart';
 import 'package:async/async.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
+import '../../Widgets/MonthesPickerWidget.dart';
 import '../../db/DealWithDataBase.dart';
 Future<void> main() async {
 
@@ -16,26 +19,6 @@ Future<void> main() async {
 //
 //   return
 // }
-void calculator(TextEditingController originalCostController, TextEditingController salvageValueController, TextEditingController usefulLifeController) {
-  int? originalCost = int.tryParse(originalCostController.text);
-  int? salvageValue = int.tryParse(salvageValueController.text);
-  int? usefulLife = int.tryParse(usefulLifeController.text);
-
-  int? depCalculationperyear;
-
-  if (originalCost != null && salvageValue != null && usefulLife != null) {
-    try {
-      depCalculationperyear = (originalCost - salvageValue) ~/ usefulLife;
-      // ~/ is used for integer division, rounding down if necessary
-    } catch (e) {
-      print('Error calculating depreciation: $e');
-    }
-  } else {
-    print('Invalid input values');
-  }
-
-  print(depCalculationperyear);
-}
 
 class StriaghtLineDep extends StatelessWidget {
   late final TextEditingController originalCostController =TextEditingController();
@@ -60,14 +43,21 @@ class StriaghtLineDep extends StatelessWidget {
               TextWithTextField(textEditingController: salvageValueController,label: 'Salvage Value'),
               TextWithTextField(textEditingController: usefulLifeController,label: 'Useful Life'),
               const SizedBox(height: 20), // Add spacing between text bars and labels
+              // MonthPickerButton(),
+
+
               ElevatedButton(
                 onPressed: () {
-                  final DatabaseHelper dbHelper = DatabaseHelper();
+                  // final DatabaseHelper dbHelper = DatabaseHelper();
 
-                  dbHelper.updateSettingsValueKey("pic-quality-after-comp",originalCostController.text);
-                  // Add your button functionality here
-                  dbHelper.logAllSettingsStoredInDB();
-                  calculator(originalCostController, salvageValueController, usefulLifeController);
+                  // dbHelper.updateSettingsValueKey("pic-quality-after-comp",originalCostController.text);
+                  // // Add your button functionality here
+                  // dbHelper.logAllSettingsStoredInDB();
+
+                  CalculateStraitLineDep depCalcClass = CalculateStraitLineDep(originalCostStr:originalCostController.text ,salvageValueStr: salvageValueController.text,usefulLifeStr:usefulLifeController.text);
+
+                  print(depCalcClass.divideTheDepOverTheUsefulLife());
+                  // calculator(originalCostController, salvageValueController, usefulLifeController);
                 },
                 child: const Text('Submit'),
               ),
@@ -87,6 +77,7 @@ class TextWithTextField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
+
       padding: const EdgeInsets.all(8.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

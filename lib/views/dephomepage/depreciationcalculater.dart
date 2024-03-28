@@ -1,5 +1,7 @@
-import 'package:accountingapp/views/depreciation/StraightLineDepreciation.dart';
+// import 'package:accountingapp/views/depreciation/StraightLineDepreciation.dart';
 import 'package:flutter/material.dart';
+
+import 'StraightLineDepreciation.dart';
 
 class DepreciationCalculator extends StatefulWidget {
   const DepreciationCalculator({Key? key}) : super(key: key);
