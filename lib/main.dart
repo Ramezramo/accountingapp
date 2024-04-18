@@ -1,13 +1,16 @@
-import 'package:accountingapp/views/homepage/homepagemain.dart';
+import 'dart:io';
 import 'package:flutter/material.dart';
-// import 'package:google_fonts/google_fonts.dart';
-import 'package:path/path.dart';
-import 'package:sqflite/sqflite.dart';
-import 'package:flutter/widgets.dart';
-
-import 'db/DealWithDataBase.dart';
-import 'db/addingnewuserobject.dart';
-import 'db/appsettingsobject.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:intl/date_symbol_data_local.dart';
+import 'package:sossoldi/database/DealWithDataBase.dart';
+import 'package:sossoldi/database/addingnewuserobject.dart';
+import 'package:sossoldi/database/appsettingsobject.dart';
+import 'package:workmanager/workmanager.dart';
+import 'package:sossoldi/utils/worker_manager.dart';
+import 'pages/notifications/notifications_service.dart';
+import 'providers/theme_provider.dart';
+import 'routes.dart';
+import 'utils/app_theme.dart';
 
 Future<void> checkDataBaseForTheFirstTime () async {
   ///will checkout the database and find-out if the first time open it will insert these settings
@@ -23,94 +26,45 @@ Future<void> checkDataBaseForTheFirstTime () async {
   // Retrieve all settings
   List<Settings> allSettings = await dbHelper.getAllSettings();
 
-  allSettings.forEach((element) {
+  for (var element in allSettings) {
     print(element);
-  });
+  }
 
   var ramez = User(id: 00, name: 'ramez', age: 22);
   await dbHelper.insertUser(ramez);
-  print(await dbHelper.users());
+  print(await dbHelper.logAllUsers());
 
 }
-Future main() async {
+
+
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  checkDataBaseForTheFirstTime();
+  if(Platform.isAndroid){
+    checkDataBaseForTheFirstTime();
+    requestNotificationPermissions();
+    initializeNotifications();
+    Workmanager().initialize(callbackDispatcher);
 
-  runApp(const App());
-}
 
-class App extends StatefulWidget {
-  const App({Key? key}) : super(key: key);
-
-  @override
-  State<App> createState() => _AppState();
-}
-
-class _AppState extends State<App> {
-  @override
-  void initState() {
-    super.initState();
-    // initConnectycube();
   }
+  initializeDateFormatting('it_IT', null).then((_) => runApp(const ProviderScope(child: Launcher())));
+}
 
-  // initConnectycube() {
-  //   init(
-  //     config.APP_ID,
-  //     config.AUTH_KEY,
-  //     config.AUTH_SECRET,
-  //     onSessionRestore: () {
-  //       return SharedPrefs.getUser().then((savedUser) {
-  //         return createSession(savedUser);
-  //       });
-  //     },
-  //   );
-  // }
+class Launcher extends ConsumerWidget {
+  const Launcher({super.key});
 
+  // This widget is the root of your application.
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final appThemeState = ref.watch(appThemeStateNotifier);
     return MaterialApp(
-      home: Scaffold(
-        // appBar: AppBar(
-        //   title: const Text('Your App Title'),
-        // ),
-        body: Builder(builder: (context) {
-          // CallManager.instance.init(context);
-
-          // Here you can place the content of your app
-          return HomePage();
-        }),
-      ),
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        timePickerTheme: TimePickerThemeData(
-          dayPeriodTextColor: Colors.cyanAccent.shade700,
-          //hourMinuteColor: Colors.cyanAccent.shade700,
-
-        ),
-        hintColor: Colors.cyanAccent.shade700,
-        primaryColor: Colors.cyanAccent,
-        primaryColorDark: Colors.grey.shade700,
-        primaryColorLight: Colors.grey.shade200,
-        //highlightColor: Colors.amber.shade700,
-
-      ),
-      localizationsDelegates: const [
-        // ... app-specific localization delegate[s] here
-        // GlobalMaterialLocalizations.delegate,
-        // GlobalMaterialLocalizations.delegate,
-        // GlobalWidgetsLocalizations.delegate,
-      ],
-      supportedLocales: const [
-        Locale('en', ''),
-        // English, no country code
-        Locale('he', ''),
-        // Hebrew, no country code
-        Locale('ar', ''),
-        // Hebrew, no country code
-        Locale.fromSubtags(languageCode: 'zh'),
-        // Chinese *See Advanced Locales below*
-        // ... other locales the app supports
-      ],
+      title: 'AppName',
+      theme: AppTheme.lightTheme,
+      darkTheme: AppTheme.darkTheme,
+      themeMode:
+          appThemeState.isDarkModeEnabled ? ThemeMode.dark : ThemeMode.light,
+      onGenerateRoute: makeRoute,
+      initialRoute: '/',
     );
   }
 }

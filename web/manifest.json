@@ -1,6 +1,6 @@
 {
-    "name": "accountingapp",
-    "short_name": "accountingapp",
+    "name": "sossoldi",
+    "short_name": "sossoldi",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
