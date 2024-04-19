@@ -7,7 +7,8 @@ import "../providers/settings_provider.dart";
 //tasks
 const taskShowNotification = "showReminder";
 
-@pragma('vm:entry-point') // Mandatory if the App is obfuscated or using Flutter 3.1+
+@pragma(
+    'vm:entry-point') // Mandatory if the App is obfuscated or using Flutter 3.1+
 void callbackDispatcher() async {
   Workmanager().executeTask((task, inputData) async {
     switch (task) {
@@ -15,10 +16,10 @@ void callbackDispatcher() async {
         await notificationsPlugin.show(
             0,
             "Remember to log new expenses!",
-            "Sossoldi is waiting for your latest transactions. Don't lose sight of your financial movements, and input your most recent expenses.",
+            "accounting_app_last is waiting for your latest transactions. Don't lose sight of your financial movements, and input your most recent expenses.",
             const NotificationDetails(
               android: AndroidNotificationDetails(
-                  'sossoldi#reminder', 'reminder',
+                  'accounting_app_last#reminder', 'reminder',
                   importance: Importance.max, priority: Priority.max),
               iOS: DarwinNotificationDetails(
                 presentAlert: true,
@@ -32,20 +33,30 @@ void callbackDispatcher() async {
 }
 
 void toggleTransactionReminder(bool toActive) async {
-  if(!toActive){
-    await Workmanager().cancelByUniqueName("sossoldi#reminder");
+  if (!toActive) {
+    await Workmanager().cancelByUniqueName("accounting_app_last#reminder");
   }
 }
 
 void scheduleTransactionReminder(NotificationReminderType type) async {
-  await Workmanager().cancelByUniqueName("sossoldi#reminder");
-  await Workmanager().registerPeriodicTask("sossoldi#reminder", taskShowNotification, frequency: Duration(days: type == NotificationReminderType.daily ? 1 : type == NotificationReminderType.weekly ? 7 : 30));
+  await Workmanager().cancelByUniqueName("accounting_app_last#reminder");
+  await Workmanager().registerPeriodicTask(
+      "accounting_app_last#reminder", taskShowNotification,
+      frequency: Duration(
+          days: type == NotificationReminderType.daily
+              ? 1
+              : type == NotificationReminderType.weekly
+                  ? 7
+                  : 30));
 }
 
 void scheduleAlertRecursiveTransaction() {
   //TODO
-  Workmanager().cancelByUniqueName("sossoldi#alert").then((value) => {
-        Workmanager().registerPeriodicTask("sossoldi#alert", taskShowNotification,
-            frequency: const Duration(days: 30))
-      });
+  Workmanager()
+      .cancelByUniqueName("accounting_app_last#alert")
+      .then((value) => {
+            Workmanager().registerPeriodicTask(
+                "accounting_app_last#alert", taskShowNotification,
+                frequency: const Duration(days: 30))
+          });
 }

@@ -64,7 +64,7 @@ class _PrivacyPolicyPageState extends ConsumerState<PrivacyPolicyPage> {
             child: Column(
               children: [
                 Text(
-                  'Sossoldi is build as an open source app. This service is provided by us at no cost and it is intended for use as is.\nWe are not interested in collecting any personal information. We believe such information is yours and yours alone. We do not store or transmit your personal details, nor do we include any advertising or analytics software that talks to third parties.\n',
+                  'accounting_app_last is build as an open source app. This service is provided by us at no cost and it is intended for use as is.\nWe are not interested in collecting any personal information. We believe such information is yours and yours alone. We do not store or transmit your personal details, nor do we include any advertising or analytics software that talks to third parties.\n',
                   style: Theme.of(context)
                       .textTheme
                       .bodyMedium!
@@ -78,7 +78,7 @@ class _PrivacyPolicyPageState extends ConsumerState<PrivacyPolicyPage> {
                       .copyWith(color: Theme.of(context).colorScheme.primary),
                 ),
                 Text(
-                  "Sossoldi does not collect any personal information or connect to the internet. Any information that you add in the app exist solely on your device and no where else.\n",
+                  "accounting_app_last does not collect any personal information or connect to the internet. Any information that you add in the app exist solely on your device and no where else.\n",
                   style: Theme.of(context)
                       .textTheme
                       .bodyMedium!
@@ -115,7 +115,7 @@ class _PrivacyPolicyPageState extends ConsumerState<PrivacyPolicyPage> {
                         .copyWith(color: Theme.of(context).colorScheme.primary),
                     children: [
                       TextSpan(
-                        text: 'help.sossoldi@gmail.com',
+                        text: 'help.accounting_app_last@gmail.com',
                         style: const TextStyle(
                           color: Colors.blue,
                           decoration: TextDecoration.underline,
@@ -124,7 +124,7 @@ class _PrivacyPolicyPageState extends ConsumerState<PrivacyPolicyPage> {
                           ..onTap = () {
                             launchUrl(Uri(
                               scheme: 'mailto',
-                              path: 'help.sossoldi@gmail.com',
+                              path: 'help.accounting_app_last@gmail.com',
                               queryParameters: {
                                 'subject': 'Request info',
                               },

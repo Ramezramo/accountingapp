@@ -101,7 +101,7 @@ class BankAccount extends BaseEntity {
       };
 }
 
-class BankAccountMethods extends SossoldiDatabase {
+class BankAccountMethods extends accounting_app_lastDatabase {
   Future<BankAccount> insert(BankAccount item) async {
     final db = await database;
 

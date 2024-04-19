@@ -38,7 +38,8 @@ class Currency extends BaseEntity {
           String? symbol,
           String? code,
           String? name,
-          bool? mainCurrency,t}) =>
+          bool? mainCurrency,
+          t}) =>
       Currency(
           id: id ?? this.id,
           symbol: symbol ?? this.symbol,
@@ -62,7 +63,7 @@ class Currency extends BaseEntity {
       };
 }
 
-class CurrencyMethods extends SossoldiDatabase {
+class CurrencyMethods extends accounting_app_lastDatabase {
   Future<Currency> getSelectedCurrency() async {
     final db = await database;
 
@@ -78,12 +79,11 @@ class CurrencyMethods extends SossoldiDatabase {
     } else {
       //fallback
       return const Currency(
-        id: 2,
-        symbol: '\$',
-        code: 'USD',
-        name: "United States Dollar",
-        mainCurrency: true
-      );
+          id: 2,
+          symbol: '\$',
+          code: 'USD',
+          name: "United States Dollar",
+          mainCurrency: true);
     }
   }
 
@@ -126,8 +126,7 @@ class CurrencyMethods extends SossoldiDatabase {
     return db.update(
       currencyTable,
       item.toJson(),
-      where:
-      '${CurrencyFields.id} = ?',
+      where: '${CurrencyFields.id} = ?',
       whereArgs: [item.id],
     );
   }
@@ -136,9 +135,7 @@ class CurrencyMethods extends SossoldiDatabase {
     final db = await database;
 
     return await db.delete(currencyTable,
-        where:
-        '${CurrencyFields.id} = ?',
-        whereArgs: [id]);
+        where: '${CurrencyFields.id} = ?', whereArgs: [id]);
   }
 
   void changeMainCurrency(int id) async {
@@ -147,5 +144,4 @@ class CurrencyMethods extends SossoldiDatabase {
     db.rawUpdate("UPDATE currency SET mainCurrency = 0");
     db.rawUpdate("UPDATE currency SET mainCurrency = 1 WHERE id = $id");
   }
-
 }

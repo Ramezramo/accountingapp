@@ -1,8 +1,8 @@
 // import 'package:accountingapp/views/balancesheetmacker/balancesheetMaker.dart';
 import 'package:flutter/material.dart';
-import 'package:sossoldi/pages/calculate_Income.dart';
-import 'package:sossoldi/pages/last_views/balancesheetmacker/balancesheetMaker.dart';
-import 'package:sossoldi/pages/structure.dart';
+import 'package:accounting_app_last/pages/calculate_Income.dart';
+import 'package:accounting_app_last/pages/last_views/balancesheetmacker/balancesheetMaker.dart';
+import 'package:accounting_app_last/pages/structure.dart';
 
 import '../dephomepage/depreciationcalculater.dart';
 // import '../dephomepage/reducingbalancedp/depreciationcalculater.dart';
@@ -22,10 +22,7 @@ class _HomePageState extends State<HomePageWithDrawerHeader> {
 
   final TextEditingController textField2Controller = TextEditingController();
 
-  final List bodies = [
-    const DepreciationCalculator(),
-    const Structure()
-  ];
+  final List bodies = [const DepreciationCalculator(), const Structure()];
 
   late int currentPage = 0;
 

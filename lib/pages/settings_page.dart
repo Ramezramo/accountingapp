@@ -6,13 +6,13 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:sossoldi/database/appname_database.dart';
-import 'package:sossoldi/providers/statistics_provider.dart';
+import 'package:accounting_app_last/database/appname_database.dart';
+import 'package:accounting_app_last/providers/statistics_provider.dart';
 
 import '../constants/style.dart';
 import '../custom_widgets/alert_dialog.dart';
 import '../custom_widgets/default_card.dart';
-// import '../database/sossoldi_database.dart';
+// import '../database/accounting_app_last_database.dart';
 import '../providers/accounts_provider.dart';
 import '../providers/budgets_provider.dart';
 import '../providers/categories_provider.dart';
@@ -86,7 +86,8 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
         child: Column(
           children: [
             Padding(
-              padding: const EdgeInsets.symmetric(vertical: 24.0, horizontal: 16.0),
+              padding:
+                  const EdgeInsets.symmetric(vertical: 24.0, horizontal: 16.0),
               child: Row(
                 children: [
                   Container(
@@ -122,53 +123,59 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                 return Padding(
                     padding: const EdgeInsets.only(bottom: 16),
                     child: DefaultCard(
-                  onTap: () {
-                    if (setting[3] != null) {
-                      Navigator.of(context).pushNamed(setting[3] as String);
-                    }
-                  },
-                  child: Row(
-                    children: [
-                      Container(
-                        decoration: const BoxDecoration(
-                          color: blue5,
-                          shape: BoxShape.circle,
-                        ),
-                        padding: const EdgeInsets.all(10.0),
-                        child: Icon(
-                          setting[0] as IconData,
-                          size: 30.0,
-                          color: white,
-                        ),
-                      ),
-                      const SizedBox(width: 12.0),
-                      Expanded(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              setting[1].toString(),
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .titleLarge!
-                                  .copyWith(color: Theme.of(context).colorScheme.primary),
+                      onTap: () {
+                        if (setting[3] != null) {
+                          Navigator.of(context).pushNamed(setting[3] as String);
+                        }
+                      },
+                      child: Row(
+                        children: [
+                          Container(
+                            decoration: const BoxDecoration(
+                              color: blue5,
+                              shape: BoxShape.circle,
                             ),
-                            Text(
-                              setting[2].toString(),
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .bodySmall!
-                                  .copyWith(color: Theme.of(context).colorScheme.primary),
-                              overflow: TextOverflow.ellipsis,
-                              maxLines: 2,
+                            padding: const EdgeInsets.all(10.0),
+                            child: Icon(
+                              setting[0] as IconData,
+                              size: 30.0,
+                              color: white,
                             ),
-                          ],
-                        ),
+                          ),
+                          const SizedBox(width: 12.0),
+                          Expanded(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  setting[1].toString(),
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .titleLarge!
+                                      .copyWith(
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .primary),
+                                ),
+                                Text(
+                                  setting[2].toString(),
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .bodySmall!
+                                      .copyWith(
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .primary),
+                                  overflow: TextOverflow.ellipsis,
+                                  maxLines: 2,
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
                       ),
-                    ],
-                  ),
-                ));
+                    ));
               },
             ),
           ],
@@ -197,7 +204,9 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
             ElevatedButton(
               child: const Text('CLEAR DB'),
               onPressed: () async {
-                await SossoldiDatabase.instance.clearDatabase().then((v) {
+                await accounting_app_lastDatabase.instance
+                    .clearDatabase()
+                    .then((v) {
                   ref.refresh(accountsProvider);
                   ref.refresh(categoriesProvider);
                   ref.refresh(transactionsProvider);
@@ -209,8 +218,10 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
             ElevatedButton(
               child: const Text('CLEAR AND FILL DEMO DATA'),
               onPressed: () async {
-                await SossoldiDatabase.instance.clearDatabase();
-                await SossoldiDatabase.instance.fillDemoData().then((value) {
+                await accounting_app_lastDatabase.instance.clearDatabase();
+                await accounting_app_lastDatabase.instance
+                    .fillDemoData()
+                    .then((value) {
                   ref.refresh(accountsProvider);
                   ref.refresh(categoriesProvider);
                   ref.refresh(transactionsProvider);

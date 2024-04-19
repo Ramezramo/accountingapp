@@ -2,7 +2,7 @@
 // import 'package:accountingapp/views/straitlinedepreciation/straitLineDepObject.dart';
 // import 'package:accountingapp/views/dephomepage/reducingbalancedp/reducingBalanceDepObject.dart';
 import 'package:flutter/material.dart';
-import 'package:sossoldi/pages/last_views/dephomepage/reducingbalancedp/reducingBalanceDepObject.dart';
+import 'package:accounting_app_last/pages/last_views/dephomepage/reducingbalancedp/reducingBalanceDepObject.dart';
 
 // import '../../Widgets/MonthesPickerWidget.dart';
 // import '../../db/DealWithDataBase.dart';
@@ -61,7 +61,7 @@ class _reducingBalanceState extends State<reducingBalance> {
                   textEditingController: usefulLifeController,
                   label: 'Useful Life'),
               TextWithTextField(
-                  textEditingController: salvageValueController ,
+                  textEditingController: salvageValueController,
                   label: 'Salvage Value'),
               // Switch(
               //   value: isWithSelvage,
@@ -85,7 +85,8 @@ class _reducingBalanceState extends State<reducingBalance> {
                   // dbHelper.logAllSettingsStoredInDB();
 
                   CalculatereducingBalanceDep depCalcClass =
-                      CalculatereducingBalanceDep(withSelvage: isWithSelvage,
+                      CalculatereducingBalanceDep(
+                          withSelvage: isWithSelvage,
                           originalCostStr: originalCostController.text,
                           salvageValueStr: salvageValueController.text,
                           usefulLifeStr: usefulLifeController.text,
@@ -135,7 +136,8 @@ class TextWithTextField extends StatelessWidget {
           const SizedBox(height: 5),
           TextField(
             controller: textEditingController,
-            enabled: isEnabled, // Control the enabled state based on the isEnabled variable
+            enabled:
+                isEnabled, // Control the enabled state based on the isEnabled variable
           ),
         ],
       ),

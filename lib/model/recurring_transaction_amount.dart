@@ -52,8 +52,7 @@ class RecurringTransactionAmount extends BaseEntity {
           from: from ?? this.from,
           to: to ?? this.to,
           amount: amount ?? this.amount,
-          idTransaction:
-              idTransaction ?? this.idTransaction,
+          idTransaction: idTransaction ?? this.idTransaction,
           createdAt: createdAt ?? this.createdAt,
           updatedAt: updatedAt ?? this.updatedAt);
 
@@ -66,8 +65,7 @@ class RecurringTransactionAmount extends BaseEntity {
               json[RecurringTransactionAmountFields.to] as String),
           amount: json[RecurringTransactionAmountFields.amount] as num,
           idTransaction:
-              json[RecurringTransactionAmountFields.idTransaction]
-                  as int,
+              json[RecurringTransactionAmountFields.idTransaction] as int,
           createdAt: DateTime.parse(json[BaseEntityFields.createdAt] as String),
           updatedAt:
               DateTime.parse(json[BaseEntityFields.updatedAt] as String));
@@ -77,20 +75,19 @@ class RecurringTransactionAmount extends BaseEntity {
         RecurringTransactionAmountFields.from: from.toIso8601String(),
         RecurringTransactionAmountFields.to: to.toIso8601String(),
         RecurringTransactionAmountFields.amount: amount,
-        RecurringTransactionAmountFields.idTransaction:
-            idTransaction,
+        RecurringTransactionAmountFields.idTransaction: idTransaction,
         BaseEntityFields.createdAt: createdAt?.toIso8601String(),
         BaseEntityFields.updatedAt: updatedAt?.toIso8601String(),
       };
 }
 
-class RecurringTransactionMethods extends SossoldiDatabase {
-  Future<RecurringTransactionAmount> insert(RecurringTransactionAmount item) async {
+class RecurringTransactionMethods extends accounting_app_lastDatabase {
+  Future<RecurringTransactionAmount> insert(
+      RecurringTransactionAmount item) async {
     final db = await database;
     final id = await db.insert(recurringTransactionAmountTable, item.toJson());
     return item.copy(id: id);
   }
-
 
   Future<RecurringTransactionAmount> selectById(int id) async {
     final db = await database;
@@ -114,9 +111,12 @@ class RecurringTransactionMethods extends SossoldiDatabase {
 
     final orderByASC = '${RecurringTransactionAmountFields.createdAt} ASC';
 
-    final result = await db.query(recurringTransactionAmountTable, orderBy: orderByASC);
+    final result =
+        await db.query(recurringTransactionAmountTable, orderBy: orderByASC);
 
-    return result.map((json) => RecurringTransactionAmount.fromJson(json)).toList();
+    return result
+        .map((json) => RecurringTransactionAmount.fromJson(json))
+        .toList();
   }
 
   Future<int> updateItem(RecurringTransactionAmount item) async {
@@ -126,8 +126,7 @@ class RecurringTransactionMethods extends SossoldiDatabase {
     return db.update(
       recurringTransactionAmountTable,
       item.toJson(),
-      where:
-      '${RecurringTransactionAmountFields.id} = ?',
+      where: '${RecurringTransactionAmountFields.id} = ?',
       whereArgs: [item.id],
     );
   }
@@ -136,9 +135,6 @@ class RecurringTransactionMethods extends SossoldiDatabase {
     final db = await database;
 
     return await db.delete(recurringTransactionAmountTable,
-        where:
-        '${RecurringTransactionAmountFields.id} = ?',
-        whereArgs: [id]);
+        where: '${RecurringTransactionAmountFields.id} = ?', whereArgs: [id]);
   }
-
 }

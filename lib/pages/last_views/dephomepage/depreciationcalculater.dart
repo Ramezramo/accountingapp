@@ -1,7 +1,7 @@
 // import 'package:accountingapp/views/depreciation/StraightLineDepreciation.dart';
 // import 'package:accountingapp/views/dephomepage/reducingbalancedp/ReducingBalanceDepreciation.dart';
 import 'package:flutter/material.dart';
-import 'package:sossoldi/pages/last_views/dephomepage/reducingbalancedp/ReducingBalanceDepreciation.dart';
+import 'package:accounting_app_last/pages/last_views/dephomepage/reducingbalancedp/ReducingBalanceDepreciation.dart';
 
 import 'straitlinedepreciation/StraightLineDepreciation.dart';
 
@@ -9,16 +9,15 @@ class DepreciationCalculator extends StatefulWidget {
   const DepreciationCalculator({Key? key}) : super(key: key);
 
   @override
-  State<DepreciationCalculator> createState() =>
-      _DepreciationCalculatorState();
+  State<DepreciationCalculator> createState() => _DepreciationCalculatorState();
 }
 
 class _DepreciationCalculatorState extends State<DepreciationCalculator> {
   int _selectedIndex = 0;
 
-  static  final List<Widget> _widgetOptions = <Widget>[
+  static final List<Widget> _widgetOptions = <Widget>[
     StriaghtLineDep(),
-     reducingBalance(),
+    reducingBalance(),
     const Text('Page 3'),
     const Text('Page 4'), // Added fourth page
   ];
@@ -61,8 +60,10 @@ class _DepreciationCalculatorState extends State<DepreciationCalculator> {
         onTap: _onItemTapped,
         selectedFontSize: 12, // Adjust the font size for selected items
         unselectedFontSize: 9, // Adjust the font size for unselected items
-        selectedIconTheme: const IconThemeData(size: 30), // Adjust icon size for selected items
-        unselectedIconTheme: const IconThemeData(size: 24), // Adjust icon size for unselected items
+        selectedIconTheme: const IconThemeData(
+            size: 30), // Adjust icon size for selected items
+        unselectedIconTheme: const IconThemeData(
+            size: 24), // Adjust icon size for unselected items
       ),
     );
   }

@@ -1,6 +1,6 @@
+import 'package:accounting_app_last/pages/last_views/homepage/homepagemain.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:sossoldi/pages/last_views/homepage/homepagemain.dart';
 import 'pages/account_page/account_page.dart';
 import 'pages/accounts/account_list.dart';
 import 'pages/accounts/add_account.dart';
@@ -23,7 +23,8 @@ import 'pages/transactions_page/transactions_page.dart';
 Route<dynamic> makeRoute(RouteSettings settings) {
   switch (settings.name) {
     case '/':
-      return _materialPageRoute(settings.name, const HomePageWithDrawerHeader());
+      return _materialPageRoute(
+          settings.name, const HomePageWithDrawerHeader());
     case '/dashboard':
       return _materialPageRoute(
           settings.name, const CalculateIncomeDashboard());
