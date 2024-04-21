@@ -31,9 +31,9 @@ class _DepreciationCalculatorState extends State<DepreciationCalculator> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Depreciation Calculator'),
-      ),
+      // appBar: AppBar(
+      //   title: const Text('Depreciation Calculator'),
+      // ),
       body: _widgetOptions.elementAt(_selectedIndex),
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed, // Set type to fixed

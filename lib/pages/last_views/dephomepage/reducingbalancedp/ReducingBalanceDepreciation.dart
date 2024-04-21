@@ -1,6 +1,7 @@
 // import 'package:accountingapp/views/depreciation/straitLineDepObject.dart';
 // import 'package:accountingapp/views/straitlinedepreciation/straitLineDepObject.dart';
 // import 'package:accountingapp/views/dephomepage/reducingbalancedp/reducingBalanceDepObject.dart';
+import 'package:accounting_app_last/custom_widgets/button_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:accounting_app_last/pages/last_views/dephomepage/reducingbalancedp/reducingBalanceDepObject.dart';
 
@@ -46,7 +47,9 @@ class _reducingBalanceState extends State<reducingBalance> {
             // border: Border.all(),
             borderRadius:
                 BorderRadius.circular(10), // Optional: Adds rounded corners
-            color: Colors.grey[100], // Optional: Sets background color
+            color:  Theme.of(context)
+                .colorScheme
+                .tertiary, // Optional: Sets background color
           ),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -75,15 +78,9 @@ class _reducingBalanceState extends State<reducingBalance> {
               const SizedBox(
                   height: 20), // Add spacing between text bars and labels
               // MonthPickerButton(),
-
-              TextButton(
+              ButtonWidget(
+                icon: Icons.done,
                 onPressed: () {
-                  // final DatabaseHelper dbHelper = DatabaseHelper();
-
-                  // dbHelper.updateSettingsValueKey("pic-quality-after-comp",originalCostController.text);
-                  // // Add your button functionality here
-                  // dbHelper.logAllSettingsStoredInDB();
-
                   CalculatereducingBalanceDep depCalcClass =
                       CalculatereducingBalanceDep(
                           withSelvage: isWithSelvage,
@@ -93,10 +90,10 @@ class _reducingBalanceState extends State<reducingBalance> {
                           depreciationRatester: depreciationRate.text);
 
                   print(depCalcClass.divideTheDepOverTheUsefulLife());
-                  // calculator(originalCostController, salvageValueController, usefulLifeController);
                 },
-                child: const Text('Submit'),
+                text: "Submit",
               ),
+
             ],
           ),
         ),

@@ -1,6 +1,9 @@
 // import 'package:accountingapp/views/depreciation/straitLineDepObject.dart';
 // import 'package:accountingapp/views/straitlinedepreciation/straitLineDepObject.dart';
 // import 'package:accountingapp/views/dephomepage/straitlinedepreciation/straitLineDepObject.dart';
+import 'package:accounting_app_last/constants/style.dart';
+import 'package:accounting_app_last/custom_widgets/button_widget.dart';
+import 'package:accounting_app_last/pages/planning_page/manage_budget_page.dart';
 import 'package:flutter/material.dart';
 import 'package:accounting_app_last/pages/last_views/dephomepage/straitlinedepreciation/straitLineDepObject.dart';
 
@@ -38,7 +41,9 @@ class StriaghtLineDep extends StatelessWidget {
             // border: Border.all(),
             borderRadius:
                 BorderRadius.circular(10), // Optional: Adds rounded corners
-            color: Colors.grey[100], // Optional: Sets background color
+            color: Theme.of(context)
+                .colorScheme
+                .tertiary, // Optional: Sets background color
           ),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -55,25 +60,46 @@ class StriaghtLineDep extends StatelessWidget {
               const SizedBox(
                   height: 20), // Add spacing between text bars and labels
               // MonthPickerButton(),
-
-              ElevatedButton(
+              ButtonWidget(
+                icon: Icons.done,
                 onPressed: () {
-                  // final DatabaseHelper dbHelper = DatabaseHelper();
-
-                  // dbHelper.updateSettingsValueKey("pic-quality-after-comp",originalCostController.text);
-                  // // Add your button functionality here
-                  // dbHelper.logAllSettingsStoredInDB();
-
                   CalculateStraitLineDep depCalcClass = CalculateStraitLineDep(
                       originalCostStr: originalCostController.text,
                       salvageValueStr: salvageValueController.text,
                       usefulLifeStr: usefulLifeController.text);
 
                   print(depCalcClass.divideTheDepOverTheUsefulLife());
-                  // calculator(originalCostController, salvageValueController, usefulLifeController);
                 },
-                child: const Text('Submit'),
+                text: "Submit",
               ),
+              // Container(
+              //   color: Colors.white,
+              //   child: TextButton(
+
+              //     onPressed: () {
+              //       // final DatabaseHelper dbHelper = DatabaseHelper();
+
+              //       // dbHelper.updateSettingsValueKey("pic-quality-after-comp",originalCostController.text);
+              //       // // Add your button functionality here
+              //       // dbHelper.logAllSettingsStoredInDB();
+
+              //       // calculator(originalCostController, salvageValueController, usefulLifeController);
+              //     },
+              //     child:  Text(
+              //                   'Submit',
+              //                   style: Theme.of(context)
+              //                       .textTheme
+              //                       .titleSmall!
+              //                       .apply(
+              //                           color: Theme.of(context)
+              //                               .colorScheme
+              //                               .secondary),
+              //                 ) ,
+              //   ),
+              // ),
+              const SizedBox(
+                height: 5,
+              )
             ],
           ),
         ),
