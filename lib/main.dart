@@ -21,18 +21,14 @@ Future<void> checkDataBaseForTheFirstTime() async {
 
   List<Map<String, dynamic>>? themeValue =
       await dbHelper.getSettingValueByKey("delete-main-file");
-  print(themeValue);
 
   // Retrieve all settings
   List<Settings> allSettings = await dbHelper.getAllSettings();
 
-  for (var element in allSettings) {
-    print(element);
-  }
+  for (var element in allSettings) {}
 
   var ramez = User(id: 00, name: 'ramez', age: 22);
   await dbHelper.insertUser(ramez);
-  print(await dbHelper.logAllUsers());
 }
 
 void main() async {

@@ -47,7 +47,7 @@ class _reducingBalanceState extends State<reducingBalance> {
             // border: Border.all(),
             borderRadius:
                 BorderRadius.circular(10), // Optional: Adds rounded corners
-            color:  Theme.of(context)
+            color: Theme.of(context)
                 .colorScheme
                 .tertiary, // Optional: Sets background color
           ),
@@ -88,12 +88,9 @@ class _reducingBalanceState extends State<reducingBalance> {
                           salvageValueStr: salvageValueController.text,
                           usefulLifeStr: usefulLifeController.text,
                           depreciationRatester: depreciationRate.text);
-
-                  print(depCalcClass.divideTheDepOverTheUsefulLife());
                 },
                 text: "Submit",
               ),
-
             ],
           ),
         ),

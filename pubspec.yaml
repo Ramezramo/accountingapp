@@ -67,6 +67,9 @@ dependencies:
   workmanager: 0.5.2
   path:
   month_picker_dialog: ^2.11.1
+  http:
+  
+  # dart_finance: ^1.0.0
 
 dev_dependencies:
   flutter_test:

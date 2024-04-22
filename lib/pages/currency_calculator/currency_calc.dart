@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:accounting_app_last/pages/currency_calculator/scrap_data.dart';
 
 class CurrencyConverterForm extends StatefulWidget {
   @override
@@ -6,32 +7,49 @@ class CurrencyConverterForm extends StatefulWidget {
 }
 
 class _CurrencyConverterFormState extends State<CurrencyConverterForm> {
-  String _amount = '300';
+  String _amount = '0';
   String _fromCurrency = 'AUD';
   String _toCurrency = 'AUD';
-  bool _showPopularCurrenciesOnly = true;
+  TextEditingController textEditingController = TextEditingController();
+
+  Future<String>? _exchangeResult;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Currency Converter'),
+        title: const Text('Currency Converter'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
-            TextFormField(
-              initialValue: _amount,
-              onChanged: (value) {
-                setState(() {
-                  _amount = value;
-                });
-              },
-              keyboardType: TextInputType.number,
-              decoration: InputDecoration(labelText: 'Amount'),
+            Row(
+              children: [
+                Expanded(
+                  child: TextFormField(
+                    controller: textEditingController,
+                    onChanged: (value) {
+                      setState(() {
+                        _amount = value;
+                      });
+                    },
+                    keyboardType: TextInputType.number,
+                    decoration: const InputDecoration(labelText: 'Amount'),
+                  ),
+                ),
+                IconButton(
+                  onPressed: () {
+                    setState(() {
+                      _amount = '0';
+                      textEditingController.clear();
+                    });
+                  },
+                  icon: const Icon(Icons.close),
+                )
+              ],
             ),
-            SizedBox(height: 20.0),
+            const SizedBox(height: 20.0),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -51,6 +69,7 @@ class _CurrencyConverterFormState extends State<CurrencyConverterForm> {
                     'CHF',
                     'CNY',
                     'EUR',
+                    'EGP',
                     'GBP',
                     'HKD',
                     'INR',
@@ -70,11 +89,11 @@ class _CurrencyConverterFormState extends State<CurrencyConverterForm> {
                 ),
               ],
             ),
-            SizedBox(height: 20.0),
+            const SizedBox(height: 20.0),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text('To:'),
+                const Text('To:'),
                 DropdownButton<String>(
                   value: _toCurrency,
                   onChanged: (String? newValue) {
@@ -90,6 +109,7 @@ class _CurrencyConverterFormState extends State<CurrencyConverterForm> {
                     'CHF',
                     'CNY',
                     'EUR',
+                    'EGP',
                     'GBP',
                     'HKD',
                     'INR',
@@ -109,38 +129,48 @@ class _CurrencyConverterFormState extends State<CurrencyConverterForm> {
                 ),
               ],
             ),
-            SizedBox(height: 20.0),
-            Row(
-              children: [
-                Checkbox(
-                  value: _showPopularCurrenciesOnly,
-                  onChanged: (bool? newValue) {
-                    setState(() {
-                      _showPopularCurrenciesOnly = newValue!;
-                    });
-                  },
-                ),
-                Text('Show most popular currencies only'),
-              ],
+            const SizedBox(height: 20.0),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  ElevatedButton(
+                    onPressed: () {
+                      setState(() {
+                        _exchangeResult = exchange(_amount, _fromCurrency, _toCurrency);
+                      });
+                    },
+                    child: const Text('Calculate'),
+                  ),
+                  ElevatedButton(
+                    onPressed: () {
+                      setState(() {
+                        _amount = '0';
+                        textEditingController.clear();
+                        _exchangeResult = null; // Clear the result
+                      });
+                    },
+                    child: const Text('Clear'),
+                  ),
+                ],
+              ),
             ),
-            SizedBox(height: 20.0),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                ElevatedButton(
-                  onPressed: () {
-                    // Add your calculation logic here
-                  },
-                  child: Text('Calculate'),
-                ),
-                ElevatedButton(
-                  onPressed: () {
-                    // Add your clear form logic here
-                  },
-                  child: Text('Clear'),
-                ),
-              ],
-            ),
+            if (_exchangeResult != null) ...[
+              const SizedBox(height: 20.0),
+              FutureBuilder<String>(
+                future: _exchangeResult,
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return CircularProgressIndicator();
+                  } else if (snapshot.hasError) {
+                    return Text('Error: ${snapshot.error}');
+                  } else {
+                    return Text('Result: ${snapshot.data}');
+                  }
+                },
+              ),
+            ],
           ],
         ),
       ),

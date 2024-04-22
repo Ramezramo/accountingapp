@@ -15,7 +15,6 @@ class DatabaseHelper {
 
   Future<Database> initializeDatabase() async {
     String path = join(await getDatabasesPath(), 'settings.db');
-    print(path);
 
     Database database = await openDatabase(
       path,
@@ -123,7 +122,6 @@ class DatabaseHelper {
         "SELECT name FROM sqlite_master WHERE type='table';",
       );
       for (var table in tables) {
-        print("Table Name: ${table['name']}");
         // Optionally, you can query each table for its schema
         // and print more details about the table structure.
       }
@@ -144,7 +142,7 @@ class DatabaseHelper {
   Future<List<Map<String, dynamic>>> logAllSettingsStoredInDB() async {
     final Database? db = await database;
     final List<Map<String, dynamic>> maps = await db!.query("Settings");
-    print(maps);
+
     return maps;
   }
 
@@ -159,7 +157,7 @@ class DatabaseHelper {
     /// Settings{id: 4, key: pic-quality-after-comp, value: 480p}
     /// it will return the if you targetting the key "value" it will return "480p"
     ///List<Map<String, dynamic>>? delete_main_file = await dbHelper.getSettingValueByKey("delete-main-file");
-    ///print(returnValueKey(delete_main_file,"value"));
+    ///
     if (key == null) return null;
 
     // Iterate through the list of maps
@@ -187,7 +185,6 @@ class DatabaseHelper {
     } catch (e) {
       // Catch any exception and return false indicating the update operation failed
 
-      print('Failed to update setting: $e');
       // Print the error for debugging
       return false;
     }
@@ -199,7 +196,7 @@ class DatabaseHelper {
 //
 //   Future<void> prepareDataBase() async {
 //     WidgetsFlutterBinding.ensureInitialized();
-//     print("preparing data base");
+//
 //
 //     database = openDatabase(
 //       join(await getDatabasesPath(), 'gg_database.db'),
@@ -238,6 +235,6 @@ class DatabaseHelper {
 //     // await prepareDataBase();
 //     var ramez = User(id: 50, name: 'ramez', age: 22);
 //     await insertUser(ramez);
-//     print(await users());
+//
 //   }
 // }

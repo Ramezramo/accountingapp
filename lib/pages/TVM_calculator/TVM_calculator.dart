@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 
 // class CalculatorPage extends StatelessWidget {
@@ -15,8 +16,10 @@ import 'package:flutter/material.dart';
 //   }
 // }
 
+// ignore: use_key_in_widget_constructors
 class TVMcalculator extends StatefulWidget {
   @override
+  // ignore: library_private_types_in_public_api
   _CalculatorFormState createState() => _CalculatorFormState();
 }
 
@@ -27,7 +30,6 @@ class _CalculatorFormState extends State<TVMcalculator> {
   double _interestRate = 44;
   double _periods = 44;
   double _payment = 4444;
-  final _formKey = GlobalKey<FormState>(); // Add this line
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
@@ -57,7 +59,7 @@ class _CalculatorFormState extends State<TVMcalculator> {
                         });
                       },
                     ),
-                    Text('Present Value'),
+                    const Text('Present Value'),
                   ],
                 ),
       
@@ -77,7 +79,7 @@ class _CalculatorFormState extends State<TVMcalculator> {
                         });
                       },
                     ),
-                    Text('Interest Rate'),
+                    const Text('Interest Rate'),
                     Radio(
                       value: 'periods',
                       groupValue: _selectedSolve,
@@ -87,7 +89,7 @@ class _CalculatorFormState extends State<TVMcalculator> {
                         });
                       },
                     ),
-                    Text('Periods'),
+                    const Text('Periods'),
                   ],
                 ),
                 // Row(
@@ -106,7 +108,7 @@ class _CalculatorFormState extends State<TVMcalculator> {
                         });
                       },
                     ),
-                    Text('Repeating payment'),
+                    const Text('Repeating payment'),
                   ],
                 ),
               ],
@@ -119,7 +121,7 @@ class _CalculatorFormState extends State<TVMcalculator> {
                 });
               },
               keyboardType: TextInputType.number,
-              decoration: InputDecoration(labelText: 'Present value (PV)'),
+              decoration: const InputDecoration(labelText: 'Present value (PV)'),
             ),
             TextFormField(
               initialValue: _futureValue.toString(),
@@ -129,7 +131,7 @@ class _CalculatorFormState extends State<TVMcalculator> {
                 });
               },
               keyboardType: TextInputType.number,
-              decoration: InputDecoration(labelText: 'Future value (FV)'),
+              decoration: const InputDecoration(labelText: 'Future value (FV)'),
             ),
             TextFormField(
               initialValue: _interestRate.toString(),
@@ -139,7 +141,7 @@ class _CalculatorFormState extends State<TVMcalculator> {
                 });
               },
               keyboardType: TextInputType.number,
-              decoration: InputDecoration(labelText: 'Interest rate (%)'),
+              decoration: const InputDecoration(labelText: 'Interest rate (%)'),
             ),
             TextFormField(
               initialValue: _periods.toString(),
@@ -149,7 +151,7 @@ class _CalculatorFormState extends State<TVMcalculator> {
                 });
               },
               keyboardType: TextInputType.number,
-              decoration: InputDecoration(labelText: 'Number of periods'),
+              decoration: const InputDecoration(labelText: 'Number of periods'),
             ),
             TextFormField(
               initialValue: _payment.toString(),
@@ -161,13 +163,13 @@ class _CalculatorFormState extends State<TVMcalculator> {
               keyboardType: TextInputType.number,
               decoration: const InputDecoration(labelText: 'Payment'),
             ),
-            SizedBox(height: 20.0),
+            const SizedBox(height: 20.0),
             Center(
               child: ElevatedButton(
                 onPressed: () {
                   // Add your calculation logic here
                 },
-                child: Text('Calculate'),
+                child: const Text('Calculate'),
               ),
             ),
           ],

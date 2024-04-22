@@ -1,8 +1,7 @@
+import 'package:accounting_app_last/constants/style.dart';
 import 'package:flutter/material.dart';
 import 'package:accounting_app_last/pages/TVM_calculator/TVM_calculator.dart';
 import 'package:accounting_app_last/pages/currency_calculator/currency_calc.dart';
-// import 'package:accounting_app_last/pages/calculate_Income.dart';
-// import 'package:accounting_app_last/pages/last_views/balancesheetmacker/balancesheetMaker.dart';
 import 'package:accounting_app_last/pages/structure.dart';
 import '../dephomepage/depreciationcalculater.dart';
 
@@ -47,7 +46,7 @@ class _HomePageState extends State<HomePageWithDrawerHeader> {
           children: <Widget>[
             const DrawerHeader(
               decoration: BoxDecoration(
-                color: Colors.blue,
+                color: blue2,
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,

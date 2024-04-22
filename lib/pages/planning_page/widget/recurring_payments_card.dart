@@ -8,9 +8,7 @@ class RecurringPaymentCard extends StatefulWidget {
 }
 
 class _RecurringPaymentCardState extends State<RecurringPaymentCard> {
-  void addRecurringPayment() {
-    print("addRecurringPayment");
-  }
+  void addRecurringPayment() {}
 
   @override
   Widget build(BuildContext context) {

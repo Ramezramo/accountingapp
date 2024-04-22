@@ -67,8 +67,6 @@ class StriaghtLineDep extends StatelessWidget {
                       originalCostStr: originalCostController.text,
                       salvageValueStr: salvageValueController.text,
                       usefulLifeStr: usefulLifeController.text);
-
-                  print(depCalcClass.divideTheDepOverTheUsefulLife());
                 },
                 text: "Submit",
               ),

@@ -4,11 +4,10 @@ class CalculatereducingBalanceDep {
   String? usefulLifeStr;
   String? depreciationRatester;
   int depreciationPerYear_ = 0;
-  bool withSelvage ;
+  bool withSelvage;
   CalculatereducingBalanceDep(
-      {
-        required this.withSelvage,
-        required this.depreciationRatester,
+      {required this.withSelvage,
+      required this.depreciationRatester,
       required this.originalCostStr,
       required this.salvageValueStr,
       required this.usefulLifeStr});
@@ -26,19 +25,16 @@ class CalculatereducingBalanceDep {
   //   return depreciationPerYear_;
   // }
 
-
-
   divideTheDepOverTheUsefulLife() {
-    if (withSelvage){
+    if (withSelvage) {
       calulateWithSelvageValue();
-    }else{
+    } else {
       calulateNoSelvageValue();
     }
-
   }
 
-  calulateWithSelvageValue(){
-        int usefulLife = int.parse(usefulLifeStr!);
+  calulateWithSelvageValue() {
+    int usefulLife = int.parse(usefulLifeStr!);
     int originalCost = int.parse(originalCostStr!);
     double depreciationRate = double.parse(depreciationRatester!);
     int salvageValue = int.parse(salvageValueStr!);
@@ -53,23 +49,22 @@ class CalculatereducingBalanceDep {
       Map willBeAdded = {
         "year $i": {
           "net-book-value":
-              "$lastYearEquationResult - ${originalCostValueWillDecrease+lastYearEquationResult} = $originalCostValueWillDecrease",
+              "$lastYearEquationResult - ${originalCostValueWillDecrease + lastYearEquationResult} = $originalCostValueWillDecrease",
           "Depreciation":
               "$originalCostValueWillDecrease - $salvageValue * $depreciationRate = $EquationResult"
         }
       };
       originalCostValueWillDecrease -= EquationResult;
 
-
       depPerYear.addAll(willBeAdded);
-      print(willBeAdded);
 
       lastYearEquationResult = EquationResult;
     }
   }
-    calulateNoSelvageValue(){
-      /// from the ifrs course 
-        int usefulLife = int.parse(usefulLifeStr!);
+
+  calulateNoSelvageValue() {
+    /// from the ifrs course
+    int usefulLife = int.parse(usefulLifeStr!);
     int originalCost = int.parse(originalCostStr!);
     double depreciationRate = double.parse(depreciationRatester!);
     int salvageValue = int.parse(salvageValueStr!);
@@ -79,21 +74,20 @@ class CalculatereducingBalanceDep {
     // calculateDepreciationPerYear();
     for (int i = 1; i < usefulLife + 1; i += 1) {
       int EquationResult =
-          ((originalCostValueWillDecrease - lastYearEquationResult) * depreciationRate)
+          ((originalCostValueWillDecrease - lastYearEquationResult) *
+                  depreciationRate)
               .floor();
       Map willBeAdded = {
         "year $i": {
           "net-book-value":
-              "$lastYearEquationResult - ${originalCostValueWillDecrease+lastYearEquationResult} = $originalCostValueWillDecrease",
+              "$lastYearEquationResult - ${originalCostValueWillDecrease + lastYearEquationResult} = $originalCostValueWillDecrease",
           "Depreciation":
               "$originalCostValueWillDecrease - $salvageValue * $depreciationRate = $EquationResult"
         }
       };
       originalCostValueWillDecrease -= EquationResult;
 
-
       depPerYear.addAll(willBeAdded);
-      print(willBeAdded);
 
       lastYearEquationResult = EquationResult;
     }
