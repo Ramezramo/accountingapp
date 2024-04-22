@@ -1,37 +1,46 @@
-// import 'package:accountingapp/views/balancesheetmacker/balancesheetMaker.dart';
 import 'package:flutter/material.dart';
-import 'package:accounting_app_last/pages/calculate_Income.dart';
-import 'package:accounting_app_last/pages/last_views/balancesheetmacker/balancesheetMaker.dart';
+import 'package:accounting_app_last/pages/TVM_calculator/TVM_calculator.dart';
+import 'package:accounting_app_last/pages/currency_calculator/currency_calc.dart';
+// import 'package:accounting_app_last/pages/calculate_Income.dart';
+// import 'package:accounting_app_last/pages/last_views/balancesheetmacker/balancesheetMaker.dart';
 import 'package:accounting_app_last/pages/structure.dart';
-
 import '../dephomepage/depreciationcalculater.dart';
-// import '../dephomepage/reducingbalancedp/depreciationcalculater.dart';
-
-// import '../depreciation/depreciationcalculater.dart';
-// import '../straitlinedepreciation/depreciddationcalculater.dart';
 
 class HomePageWithDrawerHeader extends StatefulWidget {
-  const HomePageWithDrawerHeader({super.key});
+  const HomePageWithDrawerHeader({Key? key}) : super(key: key);
 
   @override
   State<HomePageWithDrawerHeader> createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePageWithDrawerHeader> {
-  final TextEditingController textField1Controller = TextEditingController();
-
-  final TextEditingController textField2Controller = TextEditingController();
-
-  final List bodies = [const DepreciationCalculator(), const Structure()];
-
   late int currentPage = 0;
+
+  final List<Widget> bodies = [
+    const Structure(),
+    const DepreciationCalculator(),
+    TVMcalculator(),
+    CurrencyConverterForm(),
+  ];
+
+  final List<String> drawerItems = [
+    'Main Page',
+    'Depreciation Calculator',
+    'TVM Calculator',
+    'Currency Converter',
+  ];
+
+  final List<IconData> drawerIcons = [
+    Icons.home,
+    Icons.calculate,
+    Icons.monetization_on,
+    Icons.money,
+  ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-          // title: const Text('Home Page'),
-          ),
+      appBar: AppBar(),
       drawer: Drawer(
         child: ListView(
           padding: EdgeInsets.zero,
@@ -51,7 +60,7 @@ class _HomePageState extends State<HomePageWithDrawerHeader> {
                     ),
                   ),
                   Text(
-                    'ramez malak',
+                    'Ramez Malak',
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 24,
@@ -60,35 +69,33 @@ class _HomePageState extends State<HomePageWithDrawerHeader> {
                 ],
               ),
             ),
-            ListTile(
-              title: const Text('depreciation calculator'),
-              onTap: () {
-                setState(() {
-                  currentPage = 0;
-                  Navigator.pop(context);
-                });
-              },
-            ),
-            ListTile(
-              title: const Text('calculate income and expenses'),
-              onTap: () {
-                setState(() {
-                  currentPage = 1;
-                  Navigator.pop(context);
-                });
-              },
-            ),
-            // You can add more ListTile widgets for additional links
+            const SizedBox(height: 20), // Added SizedBox for spacing
+            for (int i = 0; i < drawerItems.length; i++)
+              Column(
+                children: [
+                  ListTile(
+                    leading: Icon(drawerIcons[i]), // Added icons to drawer items
+                    title: Text(drawerItems[i]),
+                    onTap: () {
+                      setState(() {
+                        currentPage = i;
+                        Navigator.pop(context);
+                      });
+                    },
+                  ),
+                  const SizedBox(height: 10), // Added SizedBox for spacing
+                ],
+              ),
           ],
         ),
       ),
       body: bodies[currentPage],
-      // floatingActionButton: FloatingActionButton(
-      //   onPressed: () {
-      //     // Handle the additional button press
-      //   },
-      //   child: const Icon(Icons.web_sharp),
-      // ),
     );
   }
 }
+
+// void main() {
+//   runApp(MaterialApp(
+//     home: HomePageWithDrawerHeader(),
+//   ));
+// }
