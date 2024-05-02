@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import "package:flutter_riverpod/flutter_riverpod.dart";
 
 import "../../../constants/style.dart";
+import '../../../model/ol_fls/transaction.dart';
 import '../../../providers/transactions_provider.dart';
-import '../../../model/transaction.dart';
+// import '../../../model/transaction.dart';
 import 'recurrence_selector.dart';
 
 class RecurrenceListTile extends ConsumerWidget {

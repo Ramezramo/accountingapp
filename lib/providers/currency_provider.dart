@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../model/currency.dart';
+// import '../model/currency.dart';
+import '../model/ol_fls/currency.dart';
 
 final currencyStateNotifier = ChangeNotifierProvider(
   (ref) => CurrencyState(),

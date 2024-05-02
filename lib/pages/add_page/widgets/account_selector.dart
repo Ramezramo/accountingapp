@@ -4,7 +4,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../constants/constants.dart';
 import '../../../constants/functions.dart';
 import '../../../constants/style.dart';
-import '../../../model/bank_account.dart';
+// import '../../../model/bank_account.dart';
+import '../../../model/ol_fls/bank_account.dart';
 import '../../../providers/accounts_provider.dart';
 
 class AccountSelector extends ConsumerStatefulWidget {

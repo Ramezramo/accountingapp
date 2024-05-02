@@ -1,6 +1,10 @@
-import '../model/transaction.dart';
-import '../database/appname_database.dart';
-import '../model/category_transaction.dart';
+// import '../model/transaction.dart';
+// import '../database/ol_fls/appname_database.dart';
+// import '../model/category_transaction.dart';
+import 'package:accounting_app_last/database/ol_fls/appname_database.dart';
+import 'package:accounting_app_last/model/ol_fls/category_transaction.dart';
+import 'package:accounting_app_last/model/ol_fls/transaction.dart';
+
 import 'base_entity.dart';
 
 const String budgetTable = 'budget';

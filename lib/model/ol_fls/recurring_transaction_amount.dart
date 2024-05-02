@@ -1,4 +1,6 @@
-import '../database/appname_database.dart';
+// import '../database/ol_fls/appname_database.dart';
+import 'package:accounting_app_last/database/ol_fls/appname_database.dart';
+
 import 'base_entity.dart';
 
 const String recurringTransactionAmountTable = 'recurringTransactionAmount';

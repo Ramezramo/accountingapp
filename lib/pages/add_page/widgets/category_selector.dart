@@ -4,7 +4,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../constants/constants.dart';
 import '../../../constants/functions.dart';
 import '../../../constants/style.dart';
-import '../../../model/category_transaction.dart';
+// import '../../../model/category_transaction.dart';
+import '../../../model/ol_fls/category_transaction.dart';
 import '../../../providers/categories_provider.dart';
 import '../../../providers/transactions_provider.dart';
 

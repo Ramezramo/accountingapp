@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../constants/style.dart';
-import '../../model/budget.dart';
-import '../../model/category_transaction.dart';
+// import '../../model/budget.dart';
+// import '../../model/category_transaction.dart';
+import '../../model/ol_fls/budget.dart';
+import '../../model/ol_fls/category_transaction.dart';
 import 'widget/budget_category_selector.dart';
 import '../../../providers/categories_provider.dart';
 import '../../../providers/budgets_provider.dart';

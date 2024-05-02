@@ -3,7 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 
 import '../../constants/style.dart';
-import '../../model/currency.dart';
+// import '../../model/currency.dart';
+import '../../model/ol_fls/currency.dart';
 import '../../providers/currency_provider.dart';
 import '../../providers/theme_provider.dart';
 import 'widgets/currency_selector.dart';

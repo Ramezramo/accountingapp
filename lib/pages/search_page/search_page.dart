@@ -3,7 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../providers/accounts_provider.dart';
 import '../../../providers/transactions_provider.dart';
 import '../../custom_widgets/transactions_list.dart';
-import '../../model/transaction.dart';
+import '../../model/ol_fls/transaction.dart';
+// import '../../model/transaction.dart';
 
 class SearchPage extends ConsumerStatefulWidget {
   const SearchPage({super.key});
@@ -187,7 +188,7 @@ class _SearchPage extends ConsumerState<SearchPage> {
                                     padding: const EdgeInsets.symmetric(
                                         horizontal: 10),
                                     child: FilterChip(
-                                        label: Text(account.name, style: TextStyle(color: filterAccountList[account.id]! ? Colors.white : Colors.blue.shade700)),
+                                        label: Text(account.name, style: TextStyle(color: filterAccountList[account?.id]! ? Colors.white : Colors.blue.shade700)),
                                         showCheckmark: false,
                                         selected:
                                             filterAccountList[account.id] ??

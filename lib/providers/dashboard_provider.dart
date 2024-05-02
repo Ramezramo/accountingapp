@@ -1,7 +1,9 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../model/transaction.dart';
+import '../model/ol_fls/transaction.dart';
+
+// import '../model/transaction.dart';
 
 final incomeProvider = StateProvider<num>((ref) => 0);
 final expenseProvider = StateProvider<num>((ref) => 0);

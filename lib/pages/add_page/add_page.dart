@@ -6,7 +6,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../constants/functions.dart';
 import '../../constants/style.dart';
-import '../../model/transaction.dart';
+// import '../../model/transaction.dart';
+import '../../model/ol_fls/transaction.dart';
 import '../../providers/transactions_provider.dart';
 import "widgets/account_selector.dart";
 import 'widgets/amount_section.dart';

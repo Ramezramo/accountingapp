@@ -1,15 +1,21 @@
 import 'dart:math'; // used for random number generation in demo data
 
+import 'package:accounting_app_last/model/ol_fls/recurring_transaction_amount.dart';
+import 'package:accounting_app_last/model/ol_fls/transaction.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 
 // Models
-import '../model/bank_account.dart';
-import '../model/budget.dart';
-import '../model/category_transaction.dart';
-import '../model/currency.dart';
-import '../model/recurring_transaction_amount.dart';
-import '../model/transaction.dart';
+// import '../../model/bank_account.dart';
+// import '../../model/budget.dart';
+// import '../../model/category_transaction.dart';
+// import '../../model/currency.dart';
+import '../../model/ol_fls/bank_account.dart';
+import '../../model/ol_fls/budget.dart';
+import '../../model/ol_fls/category_transaction.dart';
+import '../../model/ol_fls/currency.dart';
+// import '../../model/recurring_transaction_amount.dart';
+// import '../../model/transaction.dart';
 
 class accounting_app_lastDatabase {
   static final accounting_app_lastDatabase instance =

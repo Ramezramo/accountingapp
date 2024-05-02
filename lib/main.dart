@@ -1,10 +1,10 @@
 import 'dart:io';
+import 'package:accounting_app_last/database/nw_fls/DealWithDataBase.dart';
+import 'package:accounting_app_last/database/nw_fls/readFromDBInAnAppropriateShape.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/date_symbol_data_local.dart';
-import 'package:accounting_app_last/database/DealWithDataBase.dart';
-import 'package:accounting_app_last/database/addingnewuserobject.dart';
-import 'package:accounting_app_last/database/appsettingsobject.dart';
+
 import 'package:workmanager/workmanager.dart';
 import 'package:accounting_app_last/utils/worker_manager.dart';
 import 'pages/notifications/notifications_service.dart';
@@ -12,29 +12,14 @@ import 'providers/theme_provider.dart';
 import 'routes.dart';
 import 'utils/app_theme.dart';
 
-Future<void> checkDataBaseForTheFirstTime() async {
-  ///will checkout the database and find-out if the first time open it will insert these settings
-  final DatabaseHelper dbHelper = DatabaseHelper();
 
-  // Initialize settings table
-  await dbHelper.initializeDatabase();
 
-  List<Map<String, dynamic>>? themeValue =
-      await dbHelper.getSettingValueByKey("delete-main-file");
-
-  // Retrieve all settings
-  List<Settings> allSettings = await dbHelper.getAllSettings();
-
-  for (var element in allSettings) {}
-
-  var ramez = User(id: 00, name: 'ramez', age: 22);
-  await dbHelper.insertUser(ramez);
-}
-
-void main() async {
+void mainclass() async {
   WidgetsFlutterBinding.ensureInitialized();
   if (Platform.isAndroid) {
-    checkDataBaseForTheFirstTime();
+    SqlDb.instance.database;
+    // insert();
+
     requestNotificationPermissions();
     initializeNotifications();
     Workmanager().initialize(callbackDispatcher);
@@ -46,7 +31,6 @@ void main() async {
 class Launcher extends ConsumerWidget {
   const Launcher({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final appThemeState = ref.watch(appThemeStateNotifier);

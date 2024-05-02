@@ -3,7 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../constants/constants.dart';
-import '../../../model/budget.dart';
+// import '../../../model/budget.dart';
+import '../../../model/ol_fls/budget.dart';
 import '../../../providers/currency_provider.dart';
 
 class BudgetPieChart extends ConsumerStatefulWidget {

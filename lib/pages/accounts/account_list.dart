@@ -1,10 +1,11 @@
+import 'package:accounting_app_last/model/ol_fls/bank_account.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../constants/constants.dart';
 import '../../constants/functions.dart';
 import '../../custom_widgets/default_card.dart';
-import '../../model/bank_account.dart';
+// import '../../model/bank_account.dart';
 import '../../providers/accounts_provider.dart';
 
 class AccountList extends ConsumerStatefulWidget {

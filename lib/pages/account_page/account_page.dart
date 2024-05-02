@@ -5,8 +5,9 @@ import '../../constants/functions.dart';
 import '../../constants/style.dart';
 import '../../custom_widgets/line_chart.dart';
 import '../../custom_widgets/transactions_list.dart';
+import '../../model/ol_fls/transaction.dart';
 import '../../providers/accounts_provider.dart';
-import '../../model/transaction.dart';
+// import '../../model/transaction.dart';
 
 class AccountPage extends ConsumerStatefulWidget {
   const AccountPage({super.key});

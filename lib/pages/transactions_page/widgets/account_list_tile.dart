@@ -3,7 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../constants/functions.dart';
 import '../../../constants/style.dart';
-import '../../../model/transaction.dart';
+// import '../../../model/transaction.dart';
+import '../../../model/ol_fls/transaction.dart';
 import '../../../providers/currency_provider.dart';
 import 'accounts_tab.dart';
 

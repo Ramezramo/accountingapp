@@ -1,5 +1,6 @@
 // Defines application's structure
 
+import 'package:accounting_app_last/database/nw_fls/DealWithDataBase.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -16,6 +17,43 @@ class Structure extends ConsumerStatefulWidget {
 
   @override
   ConsumerState<Structure> createState() => _StructureState();
+}
+
+void insert() async {
+// await SqlDb.instance.deleteDB();
+  String insertQueryUser = """
+    INSERT INTO users (name, age) VALUES ('John Doe', 30);
+  """;
+  String insertQueryCategorey = """
+  INSERT INTO Categorey (category_icon, category_name, color)
+  VALUES ('icon_path', 'Category Name', 'blue');
+""";
+  String insertQueryFinancialAccount = """
+  INSERT INTO FinancialAccount (account_icon, account_name, account_beggening, main_account, color)
+  VALUES ('icon_path', 'Savings', 1000.0, 1, 'blue');
+""";
+
+  String insertUsAccTransactionQuery = """
+  INSERT INTO UsAccTransaction (transaction_type, ammount, category, date, description, transaction_financial_account)
+  VALUES ('transaction_type_value', 'amount_value', 'category_value', 'date_value', 'description_value', 'financial_account_value');
+""";
+  int insertRes = await SqlDb.instance.insertData(insertUsAccTransactionQuery);
+
+  List<Map> readTableRes =
+      await SqlDb.instance.readData("SELECT * FROM 'UsAccTransaction'");
+
+  // Future<int>? delResponse = await SqlDb.instance.deleteData(2, "notes");
+  // // Wait for the result of deleteData and assign it to delResponse
+  // int upRes = await SqlDb.instance.updateData(
+  //     "UPDATE 'UsAccTransaction' SET 'transaction_type' = 'RAMEZ UPDATED YOU MF' WHERE id = 86");
+  // // SqlDb.instance.deleteTable("UsAccTransaction");
+  // int? result = await delResponse; // Wait for the result of delResponse
+
+  print(readTableRes);
+  // print(response);
+  // print("Delete value: $result");
+
+  await SqlDb.instance.getRowById("UsAccTransaction", 86);
 }
 
 class _StructureState extends ConsumerState<Structure> {
@@ -51,7 +89,10 @@ class _StructureState extends ConsumerState<Structure> {
         leading: Padding(
           padding: const EdgeInsets.only(left: 16),
           child: ElevatedButton(
-            onPressed: () => Navigator.of(context).pushNamed('/search'),
+            // onPressed: () => Navigator.of(context).pushNamed('/search'),
+            onPressed: () {
+              insert();
+            },
             style: ElevatedButton.styleFrom(
               elevation: 0,
               shape: const CircleBorder(),

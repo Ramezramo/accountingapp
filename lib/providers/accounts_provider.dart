@@ -1,7 +1,9 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../constants/constants.dart';
-import '../model/bank_account.dart';
+// import '../model/bank_account.dart';
 import 'package:fl_chart/fl_chart.dart';
+
+import '../model/ol_fls/bank_account.dart';
 
 final mainAccountProvider = StateProvider<BankAccount?>((ref) => null);
 

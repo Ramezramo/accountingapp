@@ -1,6 +1,7 @@
+import 'package:accounting_app_last/database/ol_fls/appname_database.dart';
 import 'package:sqflite/sqflite.dart';
 
-import '../database/appname_database.dart';
+// import '../database/ol_fls/appname_database.dart';
 import 'base_entity.dart';
 import 'transaction.dart';
 import 'category_transaction.dart';

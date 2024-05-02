@@ -1,4 +1,6 @@
-import '../database/appname_database.dart';
+// import '../database/ol_fls/appname_database.dart';
+import 'package:accounting_app_last/database/ol_fls/appname_database.dart';
+
 import 'bank_account.dart';
 import 'base_entity.dart';
 import 'category_transaction.dart';
