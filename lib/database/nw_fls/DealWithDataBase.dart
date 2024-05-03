@@ -1,5 +1,10 @@
+import 'package:accounting_app_last/database/nw_fls/categoryobject.dart';
+import 'package:accounting_app_last/database/nw_fls/financialaccount.dart';
+import 'package:accounting_app_last/database/nw_fls/transaction_object.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
+
+import '../../model/ol_fls/transaction.dart';
 
 class SqlDb {
     static const integerPrimaryKeyAutoincrement = 'INTEGER PRIMARY KEY AUTOINCREMENT';
@@ -49,49 +54,55 @@ class SqlDb {
   );
 """);
 
-    await db.execute("""
-CREATE TABLE IF NOT EXISTS "FinancialAccount" (
-  "id" INTEGER  NOT NULL PRIMARY KEY  AUTOINCREMENT,
-  "account_icon" TEXT,
-  "account_name" TEXT,
-  "account_beggening" REAL, 
-  "main_account" INTEGER,
-  "color" TEXT
-);
-""");
-    await db.execute("""
-CREATE TABLE IF NOT EXISTS "Categorey" (
-  "id" INTEGER  NOT NULL PRIMARY KEY  AUTOINCREMENT,
-  "category_icon" TEXT,
-  "category_name" TEXT,
-  "color" TEXT
-);
-""");
-
-await db.execute("""
-CREATE TABLE IF NOT EXISTS UsAccTransaction (
-  "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-  "date" TEXT,
-  "amount" TEXT,
-  "type" TEXT,
-  "note" TEXT,
-  "idCategory" INTEGER,
-  "idBankAccount" INTEGER,
-  "idBankAccountTransfer" INTEGER,
-  "recurring" INTEGER,
-  "recurrencyType" TEXT,
-  "recurrencyPayDay" TEXT,
-  "recurrencyFrom" TEXT,
-  "recurrencyTo" TEXT,
-  "createdAt" TEXT,
-  "updatedAt" TEXT
-);
-""");
+    await db.execute('''
+      CREATE TABLE `$bankAccountTableRM`(
+        `${BankAccountFieldsRM.id}` $integerPrimaryKeyAutoincrement,
+        `${BankAccountFieldsRM.name}` $textNotNull,
+        `${BankAccountFieldsRM.symbol}` $textNotNull,
+        `${BankAccountFieldsRM.color}` $integerNotNull,
+        `${BankAccountFieldsRM.startingValue}` $realNotNull,
+        `${BankAccountFieldsRM.active}` $integerNotNull CHECK (${BankAccountFieldsRM.active} IN (0, 1)),
+        `${BankAccountFieldsRM.mainAccount}` $integerNotNull CHECK (${BankAccountFieldsRM.mainAccount} IN (0, 1)),
+        `${BankAccountFieldsRM.createdAt}` $textNotNull,
+        `${BankAccountFieldsRM.updatedAt}` $textNotNull
+      )
+      ''');
+    await db.execute('''
+      CREATE TABLE `$categoryTransactionTableRM`(
+        `${CategoryTransactionFieldsRM.id}` $integerPrimaryKeyAutoincrement,
+        `${CategoryTransactionFieldsRM.name}` $textNotNull,
+        `${CategoryTransactionFieldsRM.symbol}` $textNotNull,
+        `${CategoryTransactionFieldsRM.color}` $integerNotNull,
+        `${CategoryTransactionFieldsRM.note}` $text,
+        `${CategoryTransactionFieldsRM.parent}` $integer,
+        `${CategoryTransactionFieldsRM.createdAt}` $textNotNull,
+        `${CategoryTransactionFieldsRM.updatedAt}` $textNotNull
+      )
+    ''');
+    await db.execute('''
+      CREATE TABLE `$transactionTableRM`(
+        `${TransactionFieldsRM.id}` $integerPrimaryKeyAutoincrement,
+        `${TransactionFieldsRM.date}` $text,
+        `${TransactionFieldsRM.amount}` $realNotNull,
+        `${TransactionFieldsRM.type}` $integerNotNull,
+        `${TransactionFieldsRM.note}` $text,
+        `${TransactionFieldsRM.idCategory}` $integer,
+        `${TransactionFieldsRM.idBankAccount}` $integerNotNull,
+        `${TransactionFieldsRM.idBankAccountTransfer}` $integer,
+        `${TransactionFieldsRM.recurring}` $integerNotNull CHECK (${TransactionFieldsRM.recurring} IN (0, 1)),
+        `${TransactionFieldsRM.recurrencyType}` $text,
+        `${TransactionFieldsRM.recurrencyPayDay}` $integer,
+        `${TransactionFieldsRM.recurrencyFrom}` $text,
+        `${TransactionFieldsRM.recurrencyTo}` $text,
+        `${TransactionFieldsRM.createdAt}` $textNotNull,
+        `${TransactionFieldsRM.updatedAt}` $textNotNull
+      )
+    ''');
   }
 
-  Future<List<Map>> readData(String sql) async {
+  Future<List<Map>> readTableData(String tableNameb)async {
     Database? mydb = _database;
-    List<Map> response = await mydb!.rawQuery(sql);
+    List<Map> response = await mydb!.rawQuery("SELECT * FROM '$tableNameb'");
     return response;
   }
 

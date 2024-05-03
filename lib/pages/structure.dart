@@ -1,6 +1,7 @@
 // Defines application's structure
 
 import 'package:accounting_app_last/database/nw_fls/DealWithDataBase.dart';
+import 'package:accounting_app_last/database/nw_fls/transaction_object.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -33,14 +34,37 @@ void insert() async {
   VALUES ('icon_path', 'Savings', 1000.0, 1, 'blue');
 """;
 
-  String insertUsAccTransactionQuery = """
-  INSERT INTO UsAccTransaction (transaction_type, ammount, category, date, description, transaction_financial_account)
-  VALUES ('transaction_type_value', 'amount_value', 'category_value', 'date_value', 'description_value', 'financial_account_value');
+      
+
+     
+String insertUsAccTransactionQuery = """
+  INSERT INTO $transactionTableRM (
+        ${TransactionFieldsRM.date},
+        ${TransactionFieldsRM.amount},
+        ${TransactionFieldsRM.type},
+        ${TransactionFieldsRM.note},
+        ${TransactionFieldsRM.idCategory},
+        ${TransactionFieldsRM.idBankAccount},
+        ${TransactionFieldsRM.idBankAccountTransfer},
+        ${TransactionFieldsRM.recurring},
+        ${TransactionFieldsRM.recurrencyType},
+        ${TransactionFieldsRM.recurrencyPayDay},
+        ${TransactionFieldsRM.recurrencyFrom},
+        ${TransactionFieldsRM.recurrencyTo},
+        ${TransactionFieldsRM.createdAt},
+        ${TransactionFieldsRM.updatedAt}
+  ) VALUES (
+    'date_value', 'amount_value', 'type_value', 'note_value', 'idCategory_value', 
+    'idBankAccount_value', 'idBankAccountTransfer_value', '0', 
+    'recurrencyType_value', 'recurrencyPayDay_value', 'recurrencyFrom_value', 
+    'recurrencyTo_value', 'createdAt_value', 'updatedAt_value'
+  );
 """;
+
   int insertRes = await SqlDb.instance.insertData(insertUsAccTransactionQuery);
 
   List<Map> readTableRes =
-      await SqlDb.instance.readData("SELECT * FROM 'UsAccTransaction'");
+      await SqlDb.instance.readTableData("UsAccTransaction");
 
   // Future<int>? delResponse = await SqlDb.instance.deleteData(2, "notes");
   // // Wait for the result of deleteData and assign it to delResponse

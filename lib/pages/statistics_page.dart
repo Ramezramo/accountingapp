@@ -63,7 +63,7 @@ class _StatsPageState extends ConsumerState<StatsPage> with Functions {
                                 text: TextSpan(
                                   children: [
                                     TextSpan(
-                                      text: numToCurrency(currentYearMonthlyTransactions.last.y),
+                                      text: "program error here",
                                       style: Theme.of(context)
                                           .textTheme
                                           .headlineLarge

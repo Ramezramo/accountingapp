@@ -14,7 +14,7 @@ import 'utils/app_theme.dart';
 
 
 
-void mainclass() async {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   if (Platform.isAndroid) {
     SqlDb.instance.database;

@@ -163,7 +163,7 @@ class _AmountSectionState extends ConsumerState<AmountSection> with Functions {
                                     ),
                                     const Spacer(),
                                     Text(
-                                      ref.watch(bankAccountProvider)!.name,
+                                      "hola",
                                       style: Theme.of(context).textTheme.bodySmall!.copyWith(
                                             color: grey1,
                                           ),

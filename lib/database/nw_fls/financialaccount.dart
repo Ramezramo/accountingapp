@@ -1,5 +1,30 @@
 import 'package:flutter/material.dart'; // Import the material package for Color
+const String bankAccountTableRM = 'FinancialAccount';
 
+class BankAccountFieldsRM {
+  static String id = "id";
+  static String name = 'name';
+  static String symbol = 'symbol';
+  static String color = 'color';
+  static String startingValue = 'startingValue';
+  static String active = 'active';
+  static String mainAccount = 'mainAccount';
+  static String total = 'total';
+  static String createdAt = 'CreatedAt';
+  static String updatedAt = 'UpdatedAt';
+
+  static final List<String> allFields = [
+    id,
+    name,
+    symbol,
+    color,
+    startingValue,
+    active,
+    mainAccount,
+   createdAt,
+    updatedAt
+  ];
+}
 class FinancialAccount {
   final Object? accountIcon;
   final Object? accountName;

@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 
 import '../../model/ol_fls/base_entity.dart'; // Import the material package for Color
 
-const String transactionTable = 'transaction';
+const String transactionTableRM = 'UsAccTransaction';
 
-class TransactionFields extends BaseEntityFields {
+class TransactionFieldsRM extends BaseEntityFields {
   static String id = 'id';
   static String date = 'date';
   static String amount = 'amount';
@@ -77,12 +77,12 @@ class AccTransaction {
   Map<String, dynamic> toMap() {
     return {
       'id': id,
-      TransactionFields.type: transactionType,
-      TransactionFields.amount: ammount,
-      TransactionFields.categoryName: category,
-      TransactionFields.date: date,
-      TransactionFields.note: description,
-      TransactionFields.bankAccountName: transactionFinancialAccount,
+      TransactionFieldsRM.type: transactionType,
+      TransactionFieldsRM.amount: ammount,
+      TransactionFieldsRM.categoryName: category,
+      TransactionFieldsRM.date: date,
+      TransactionFieldsRM.note: description,
+      TransactionFieldsRM.bankAccountName: transactionFinancialAccount,
     };
   }
 
