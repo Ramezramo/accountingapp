@@ -6,13 +6,16 @@ import 'package:path/path.dart';
 
 import '../../model/ol_fls/transaction.dart';
 
+
+
 class SqlDb {
-    static const integerPrimaryKeyAutoincrement = 'INTEGER PRIMARY KEY AUTOINCREMENT';
-    static const integerNotNull = 'INTEGER NOT NULL';
-    static const integer = 'INTEGER';
-    static const realNotNull = 'REAL NOT NULL';
-    static const textNotNull = 'TEXT NOT NULL';
-    static const text = 'TEXT';
+  static const integerPrimaryKeyAutoincrement =
+      'INTEGER PRIMARY KEY AUTOINCREMENT';
+  static const integerNotNull = 'INTEGER NOT NULL';
+  static const integer = 'INTEGER';
+  static const realNotNull = 'REAL NOT NULL';
+  static const textNotNull = 'TEXT NOT NULL';
+  static const text = 'TEXT';
   SqlDb._privateConstructor();
   static final SqlDb instance = SqlDb._privateConstructor();
 
@@ -47,10 +50,13 @@ class SqlDb {
  ''');
 
     await db.execute("""
-  CREATE TABLE IF NOT EXISTS "users"(
-    "id" INTEGER  NOT NULL PRIMARY KEY  AUTOINCREMENT,
-    "name" TEXT,
-    "age" INTEGER
+  CREATE TABLE IF NOT EXISTS "totals"(
+    "id" $integerPrimaryKeyAutoincrement,
+    "income" $integerNotNull,
+    "expenses" $integerNotNull,
+    "totalTransactions" $integerNotNull,
+    "totalCatecories" $integerNotNull,
+    "totalFinancialAccounts" $integerNotNull
   );
 """);
 
@@ -79,6 +85,7 @@ class SqlDb {
         `${CategoryTransactionFieldsRM.updatedAt}` $textNotNull
       )
     ''');
+
     await db.execute('''
       CREATE TABLE `$transactionTableRM`(
         `${TransactionFieldsRM.id}` $integerPrimaryKeyAutoincrement,
@@ -98,9 +105,74 @@ class SqlDb {
         `${TransactionFieldsRM.updatedAt}` $textNotNull
       )
     ''');
+
+    ///set the totals by 0 for the first time and then it will just updated
+
+    // SqlDb.instance.insertData();
+    await db.rawInsert("""
+  INSERT INTO totals (
+                        "income","expenses","totalTransactions","totalCatecories","totalFinancialAccounts"
+                        ) VALUES (
+                        '0','0','0','0','0'
+                                  );
+""");
   }
 
-  Future<List<Map>> readTableData(String tableNameb)async {
+  Future updateTotals() async {
+    /// this function will be executed every time the user makes an operation
+    double income = 0;
+    double expenses = 0;
+    int totalTransactions = 0;
+    int totalCatecories = 0;
+    int totalFinancialAccounts = 0;
+    Database? mydb = _database;
+    print("updateTotals1");
+    List<Map> transactions=
+        await mydb!.rawQuery("SELECT * FROM '$transactionTableRM'");
+    List<Map> categories =
+        await mydb.rawQuery("SELECT * FROM '$categoryTransactionTableRM'");
+    List<Map> financialAccounts =
+        await mydb.rawQuery("SELECT * FROM '$bankAccountTableRM'");
+
+        print("updateTotals2");
+    // print(response);
+    totalTransactions = transactions.length;
+  totalCatecories = categories.length;
+    totalFinancialAccounts = financialAccounts.length;
+    print("updateTotals3");
+    for (Map transaction in transactions) {
+      if (transaction[TransactionFieldsRM.type] ==
+          TransactionFieldsRM.typeIncome) {
+        income += transaction[TransactionFieldsRM.amount];
+      } else if (transaction[TransactionFieldsRM.type] ==
+          TransactionFieldsRM.typeExpenses) {
+        expenses += transaction[TransactionFieldsRM.amount];
+      }
+    }
+    print("updateTotals4");
+//  "income","expenses","totalTransactions","totalCatecories","totalFinancialAccounts"
+    //   int totalTransactions = 0;
+    // int totalCatecories = 0;
+    // int totalFinancialAccounts = 0;
+   
+    await SqlDb.instance
+        .updateData("UPDATE 'totals' SET 'income' = '$income' WHERE id = 1");
+   await SqlDb.instance.updateData(
+        "UPDATE 'totals' SET 'expenses' = '$expenses' WHERE id = 1");
+        print("updateTotals5");
+       await SqlDb.instance.updateData(
+        "UPDATE 'totals' SET 'totalTransactions' = '$totalTransactions' WHERE id = 1");
+            await SqlDb.instance.updateData(
+        "UPDATE 'totals' SET 'totalCatecories' = '$totalCatecories' WHERE id = 1");
+            await SqlDb.instance.updateData(
+        "UPDATE 'totals' SET 'totalFinancialAccounts' = '$totalFinancialAccounts' WHERE id = 1");
+    // print(upinc);
+    // print(upexp);
+    // return response;
+  }
+
+  Future<List<Map>> readTableData(String tableNameb) async {
+    // await SqlDb.instance.updateTotals();
     Database? mydb = _database;
     List<Map> response = await mydb!.rawQuery("SELECT * FROM '$tableNameb'");
     return response;
@@ -144,11 +216,12 @@ class SqlDb {
   Future<Future<int>?> deleteData(int id, String tableName) async {
     /// just pass the id of the row and table name it will be deleted
     Database? mydb = _database;
-    return mydb?.delete(
+    Future<int> deleteVal = mydb!.delete(
       tableName,
       where: 'id = ?',
       whereArgs: [id],
     );
+    return deleteVal;
   }
 
   Future<void> deleteTable(tableName) async {

@@ -1,7 +1,9 @@
-import 'package:flutter/material.dart'; // Import the material package for Color
+import 'package:flutter/material.dart';
+
+import '../../model/ol_fls/base_entity.dart'; // Import the material package for Color
 const String bankAccountTableRM = 'FinancialAccount';
 
-class BankAccountFieldsRM {
+class BankAccountFieldsRM extends BaseEntityFields {
   static String id = "id";
   static String name = 'name';
   static String symbol = 'symbol';

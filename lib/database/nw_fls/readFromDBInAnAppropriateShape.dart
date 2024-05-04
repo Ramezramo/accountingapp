@@ -4,7 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:sqflite/sqflite.dart';
 
 Future<List<Map<String, dynamic>>?> getSettingValueByKey(String key) async {
-  print("gogogogogog");
+  // print("gogogogogog");
   final Database? db = await SqlDb.instance.database;
   List<Map<String, dynamic>> settings = await db!.query(
     'Categorey',

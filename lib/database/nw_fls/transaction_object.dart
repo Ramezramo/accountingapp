@@ -6,10 +6,13 @@ import '../../model/ol_fls/base_entity.dart'; // Import the material package for
 const String transactionTableRM = 'UsAccTransaction';
 
 class TransactionFieldsRM extends BaseEntityFields {
+
   static String id = 'id';
   static String date = 'date';
   static String amount = 'amount';
   static String type = 'type';
+  static String typeExpenses = 'expenses';
+  static String typeIncome = 'income';
   static String note = 'note';
   static String idCategory = 'idCategory'; // FK
   static String categoryName = 'categoryName';

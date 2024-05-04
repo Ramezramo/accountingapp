@@ -1,10 +1,12 @@
 // Defines application's structure
 
 import 'package:accounting_app_last/database/nw_fls/DealWithDataBase.dart';
+import 'package:accounting_app_last/database/nw_fls/financialaccount.dart';
 import 'package:accounting_app_last/database/nw_fls/transaction_object.dart';
+import 'package:accounting_app_last/model/ol_fls/category_transaction.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
+import '../database/nw_fls/categoryobject.dart';
 import '../providers/transactions_provider.dart';
 import 'calculate_Income.dart';
 import 'planning_page/planning_page.dart';
@@ -21,23 +23,37 @@ class Structure extends ConsumerStatefulWidget {
 }
 
 void insert() async {
-// await SqlDb.instance.deleteDB();
-  String insertQueryUser = """
-    INSERT INTO users (name, age) VALUES ('John Doe', 30);
-  """;
-  String insertQueryCategorey = """
-  INSERT INTO Categorey (category_icon, category_name, color)
-  VALUES ('icon_path', 'Category Name', 'blue');
-""";
-  String insertQueryFinancialAccount = """
-  INSERT INTO FinancialAccount (account_icon, account_name, account_beggening, main_account, color)
-  VALUES ('icon_path', 'Savings', 1000.0, 1, 'blue');
+
+  String insertCategory = """
+  INSERT INTO $categoryTransactionTableRM (
+        ${CategoryTransactionFieldsRM.name},
+        ${CategoryTransactionFieldsRM.symbol},
+        ${CategoryTransactionFieldsRM.color},
+        ${CategoryTransactionFieldsRM.note},
+        ${CategoryTransactionFieldsRM.parent},
+        ${CategoryTransactionFieldsRM.createdAt},
+        ${CategoryTransactionFieldsRM.updatedAt}
+  ) VALUES (
+    'name', 'symbol', 'color', 'note_value', 'parent', 
+    'createdAt', 'updatedAt'
+  );
 """;
 
-      
+  String insertQueryFinancialAccount = """INSERT INTO FinancialAccount (
+        ${BankAccountFieldsRM.name},
+        ${BankAccountFieldsRM.symbol},
+        ${BankAccountFieldsRM.color},
+        ${BankAccountFieldsRM.startingValue},
+        ${BankAccountFieldsRM.active},
+        ${BankAccountFieldsRM.mainAccount},
+        ${BankAccountFieldsRM.createdAt},
+        ${BankAccountFieldsRM.updatedAt}
+  ) VALUES (
+    '0', '0','0','0','0','0','0','0'
+  );
+""";
 
-     
-String insertUsAccTransactionQuery = """
+  String insertUsAccTransactionQuery = """
   INSERT INTO $transactionTableRM (
         ${TransactionFieldsRM.date},
         ${TransactionFieldsRM.amount},
@@ -54,23 +70,23 @@ String insertUsAccTransactionQuery = """
         ${TransactionFieldsRM.createdAt},
         ${TransactionFieldsRM.updatedAt}
   ) VALUES (
-    'date_value', 'amount_value', 'type_value', 'note_value', 'idCategory_value', 
+    'date_value', '500', '${TransactionFieldsRM.typeExpenses}', 'note_value', 'idCategory_value', 
     'idBankAccount_value', 'idBankAccountTransfer_value', '0', 
     'recurrencyType_value', 'recurrencyPayDay_value', 'recurrencyFrom_value', 
     'recurrencyTo_value', 'createdAt_value', 'updatedAt_value'
   );
 """;
-
-  int insertRes = await SqlDb.instance.insertData(insertUsAccTransactionQuery);
-
+await SqlDb.instance.insertData(insertCategory);
+  await SqlDb.instance.insertData(insertQueryFinancialAccount);
+  await SqlDb.instance.insertData(insertUsAccTransactionQuery);
+  await SqlDb.instance.updateTotals();
   List<Map> readTableRes =
-      await SqlDb.instance.readTableData("UsAccTransaction");
-
+      await SqlDb.instance.readTableData("totals");
   // Future<int>? delResponse = await SqlDb.instance.deleteData(2, "notes");
   // // Wait for the result of deleteData and assign it to delResponse
   // int upRes = await SqlDb.instance.updateData(
   //     "UPDATE 'UsAccTransaction' SET 'transaction_type' = 'RAMEZ UPDATED YOU MF' WHERE id = 86");
-  // // SqlDb.instance.deleteTable("UsAccTransaction");
+  // SqlDb.instance.deleteTable("UsAccTransaction");
   // int? result = await delResponse; // Wait for the result of delResponse
 
   print(readTableRes);
