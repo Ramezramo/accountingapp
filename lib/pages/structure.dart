@@ -39,7 +39,7 @@ void insert() async {
   );
 """;
 
-  String insertQueryFinancialAccount = """INSERT INTO FinancialAccount (
+  String insertQueryFinancialAccount = """INSERT INTO $bankAccountTableRM (
         ${BankAccountFieldsRM.name},
         ${BankAccountFieldsRM.symbol},
         ${BankAccountFieldsRM.color},
