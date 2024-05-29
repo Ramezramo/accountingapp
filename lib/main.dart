@@ -1,7 +1,9 @@
 import 'dart:io';
-import 'package:accounting_app_last/database/nw_fls/DealWithDataBase.dart';
-import 'package:accounting_app_last/database/nw_fls/readFromDBInAnAppropriateShape.dart';
+import 'package:accounting_app_last/newdfiles/bloc/cubit/dboperationsbloc_cubit.dart';
+import 'package:accounting_app_last/newdfiles/dboperations/DealWithDataBase.dart';
+import 'package:accounting_app_last/newdfiles/dboperations/readFromDBInAnAppropriateShape.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/date_symbol_data_local.dart';
 
@@ -34,14 +36,39 @@ class Launcher extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final appThemeState = ref.watch(appThemeStateNotifier);
-    return MaterialApp(
-      title: 'AppName',
-      theme: AppTheme.lightTheme,
-      darkTheme: AppTheme.darkTheme,
-      themeMode:
-          appThemeState.isDarkModeEnabled ? ThemeMode.dark : ThemeMode.light,
-      onGenerateRoute: makeRoute,
-      initialRoute: '/',
+    return BlocProvider(
+      create: (context) => DboperationsblocCubit()..readExpensesAndIncome(),
+      child: MaterialApp(
+          title: 'AppName',
+          theme: AppTheme.lightTheme,
+          darkTheme: AppTheme.darkTheme,
+          themeMode:
+              appThemeState.isDarkModeEnabled ? ThemeMode.dark : ThemeMode.light,
+          onGenerateRoute: makeRoute,
+          initialRoute: '/',
+        ),
     );
   }
 }
+
+
+
+// import 'package:flutter/material.dart';
+// import 'package:flutter_bloc/flutter_bloc.dart';
+// import 'dboperationsbloc_cubit.dart';
+
+// void main() {
+//   runApp(MyApp());
+// }
+
+// class MyApp extends StatelessWidget {
+//   @override
+//   Widget build(BuildContext context) {
+//     return BlocProvider(
+//       create: (context) => DboperationsblocCubit(),
+//       child: MaterialApp(
+//         home: DbOperationsScreen(),
+//       ),
+//     );
+//   }
+// }

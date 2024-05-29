@@ -1,12 +1,10 @@
-import 'package:accounting_app_last/database/nw_fls/categoryobject.dart';
-import 'package:accounting_app_last/database/nw_fls/financialaccount.dart';
-import 'package:accounting_app_last/database/nw_fls/transaction_object.dart';
+import 'package:accounting_app_last/newdfiles/dboperations/categoryobject.dart';
+import 'package:accounting_app_last/newdfiles/dboperations/financialaccount.dart';
+import 'package:accounting_app_last/newdfiles/dboperations/transaction_object.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 
 import '../../model/ol_fls/transaction.dart';
-
-
 
 class SqlDb {
   static const integerPrimaryKeyAutoincrement =
@@ -118,6 +116,16 @@ class SqlDb {
 """);
   }
 
+  Future<TransactionRM> insertTransactionRM(TransactionRM item) async {
+    final db = await database;
+    final id = await db?.insert(transactionTableRM, item.toJson());
+    print(item.toJson());
+    print(id);
+    await updateTotals();
+    readTableData(transactionTableRM);
+    return item.copy(id: id);
+  }
+
   Future updateTotals() async {
     /// this function will be executed every time the user makes an operation
     double income = 0;
@@ -127,17 +135,17 @@ class SqlDb {
     int totalFinancialAccounts = 0;
     Database? mydb = _database;
     print("updateTotals1");
-    List<Map> transactions=
+    List<Map> transactions =
         await mydb!.rawQuery("SELECT * FROM '$transactionTableRM'");
     List<Map> categories =
         await mydb.rawQuery("SELECT * FROM '$categoryTransactionTableRM'");
     List<Map> financialAccounts =
         await mydb.rawQuery("SELECT * FROM '$bankAccountTableRM'");
 
-        print("updateTotals2");
+    print("updateTotals2");
     // print(response);
     totalTransactions = transactions.length;
-  totalCatecories = categories.length;
+    totalCatecories = categories.length;
     totalFinancialAccounts = financialAccounts.length;
     print("updateTotals3");
     for (Map transaction in transactions) {
@@ -154,17 +162,17 @@ class SqlDb {
     //   int totalTransactions = 0;
     // int totalCatecories = 0;
     // int totalFinancialAccounts = 0;
-   
+
     await SqlDb.instance
         .updateData("UPDATE 'totals' SET 'income' = '$income' WHERE id = 1");
-   await SqlDb.instance.updateData(
+    await SqlDb.instance.updateData(
         "UPDATE 'totals' SET 'expenses' = '$expenses' WHERE id = 1");
-        print("updateTotals5");
-       await SqlDb.instance.updateData(
+    print("updateTotals5");
+    await SqlDb.instance.updateData(
         "UPDATE 'totals' SET 'totalTransactions' = '$totalTransactions' WHERE id = 1");
-            await SqlDb.instance.updateData(
+    await SqlDb.instance.updateData(
         "UPDATE 'totals' SET 'totalCatecories' = '$totalCatecories' WHERE id = 1");
-            await SqlDb.instance.updateData(
+    await SqlDb.instance.updateData(
         "UPDATE 'totals' SET 'totalFinancialAccounts' = '$totalFinancialAccounts' WHERE id = 1");
     // print(upinc);
     // print(upexp);
@@ -175,6 +183,7 @@ class SqlDb {
     // await SqlDb.instance.updateTotals();
     Database? mydb = _database;
     List<Map> response = await mydb!.rawQuery("SELECT * FROM '$tableNameb'");
+    print(response);
     return response;
   }
 
@@ -202,8 +211,10 @@ class SqlDb {
   }
 
   Future<int> insertData(String sql) async {
+    print(sql);
     Database? mydb = _database;
     int response = await mydb!.rawInsert(sql);
+    await updateTotals();
     return response;
   }
 
@@ -230,6 +241,21 @@ class SqlDb {
 
     // Delete all rows from the specified table without any condition
     await mydb?.delete(tableName);
+  }
+
+  Future clearDatabase() async {
+    try {
+      await _database?.transaction((txn) async {
+        var batch = txn.batch();
+        batch.delete(transactionTableRM);
+        batch.delete(categoryTransactionTableRM);
+        batch.delete(bankAccountTableRM);
+        batch.delete(bankAccountTableRM);
+        await batch.commit();
+      });
+    } catch (error) {
+      throw Exception('DbBase.cleanDatabase: $error');
+    }
   }
 
   Future<void> deleteDB() async {

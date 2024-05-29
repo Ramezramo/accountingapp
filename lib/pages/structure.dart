@@ -1,12 +1,16 @@
 // Defines application's structure
 
-import 'package:accounting_app_last/database/nw_fls/DealWithDataBase.dart';
-import 'package:accounting_app_last/database/nw_fls/financialaccount.dart';
-import 'package:accounting_app_last/database/nw_fls/transaction_object.dart';
+import 'package:accounting_app_last/newdfiles/dboperations/DealWithDataBase.dart';
+import 'package:accounting_app_last/newdfiles/dboperations/financialaccount.dart';
+import 'package:accounting_app_last/newdfiles/dboperations/transaction_object.dart';
 import 'package:accounting_app_last/model/ol_fls/category_transaction.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../database/nw_fls/categoryobject.dart';
+import 'package:path/path.dart';
+import '../newdfiles/bloc/cubit/dboperationsbloc_cubit.dart';
+import '../newdfiles/dboperations/categoryobject.dart';
+import '../newdfiles/pages/testCubitPage/cubitpagetest.dart';
 import '../providers/transactions_provider.dart';
 import 'calculate_Income.dart';
 import 'planning_page/planning_page.dart';
@@ -22,78 +26,81 @@ class Structure extends ConsumerStatefulWidget {
   ConsumerState<Structure> createState() => _StructureState();
 }
 
-void insert() async {
+void insert(context) async {
+//   String insertCategory = """
+//   INSERT INTO $categoryTransactionTableRM (
+//         ${CategoryTransactionFieldsRM.name},
+//         ${CategoryTransactionFieldsRM.symbol},
+//         ${CategoryTransactionFieldsRM.color},
+//         ${CategoryTransactionFieldsRM.note},
+//         ${CategoryTransactionFieldsRM.parent},
+//         ${CategoryTransactionFieldsRM.createdAt},
+//         ${CategoryTransactionFieldsRM.updatedAt}
+//   ) VALUES (
+//     'name', 'symbol', 'color', 'note_value', 'parent',
+//     'createdAt', 'updatedAt'
+//   );
+// """;
 
-  String insertCategory = """
-  INSERT INTO $categoryTransactionTableRM (
-        ${CategoryTransactionFieldsRM.name},
-        ${CategoryTransactionFieldsRM.symbol},
-        ${CategoryTransactionFieldsRM.color},
-        ${CategoryTransactionFieldsRM.note},
-        ${CategoryTransactionFieldsRM.parent},
-        ${CategoryTransactionFieldsRM.createdAt},
-        ${CategoryTransactionFieldsRM.updatedAt}
-  ) VALUES (
-    'name', 'symbol', 'color', 'note_value', 'parent', 
-    'createdAt', 'updatedAt'
+//   String insertQueryFinancialAccount = """INSERT INTO $bankAccountTableRM (
+//         ${BankAccountFieldsRM.name},
+//         ${BankAccountFieldsRM.symbol},
+//         ${BankAccountFieldsRM.color},
+//         ${BankAccountFieldsRM.startingValue},
+//         ${BankAccountFieldsRM.active},
+//         ${BankAccountFieldsRM.mainAccount},
+//         ${BankAccountFieldsRM.createdAt},
+//         ${BankAccountFieldsRM.updatedAt}
+//   ) VALUES (
+//     '0', '0','0','0','0','0','0','0'
+//   );
+// """;
+
+//   String insertUsAccTransactionQuery = """
+//   INSERT INTO $transactionTableRM (
+//         ${TransactionFieldsRM.date},
+//         ${TransactionFieldsRM.amount},
+//         ${TransactionFieldsRM.type},
+//         ${TransactionFieldsRM.note},
+//         ${TransactionFieldsRM.idCategory},
+//         ${TransactionFieldsRM.idBankAccount},
+//         ${TransactionFieldsRM.idBankAccountTransfer},
+//         ${TransactionFieldsRM.recurring},
+//         ${TransactionFieldsRM.recurrencyType},
+//         ${TransactionFieldsRM.recurrencyPayDay},
+//         ${TransactionFieldsRM.recurrencyFrom},
+//         ${TransactionFieldsRM.recurrencyTo},
+//         ${TransactionFieldsRM.createdAt},
+//         ${TransactionFieldsRM.updatedAt}
+//   ) VALUES (
+//     'date_value', '500', '${TransactionFieldsRM.typeIncome}', 'note_value', 'idCategory_value',
+//     'idBankAccount_value', 'idBankAccountTransfer_value', '0',
+//     'recurrencyType_value', 'recurrencyPayDay_value', 'recurrencyFrom_value',
+//     'recurrencyTo_value', 'createdAt_value', 'updatedAt_value'
+//   );
+// """;
+// await SqlDb.instance.insertData(insertCategory);
+//   await SqlDb.instance.insertData(insertQueryFinancialAccount);
+//   await SqlDb.instance.insertData(insertUsAccTransactionQuery);
+//   await SqlDb.instance.updateTotals();
+//   List<Map> readTableRes =
+//       await SqlDb.instance.readTableData("totals");
+//   // Future<int>? delResponse = await SqlDb.instance.deleteData(2, "notes");
+//   // // Wait for the result of deleteData and assign it to delResponse
+//   // int upRes = await SqlDb.instance.updateData(
+//   //     "UPDATE 'UsAccTransaction' SET 'transaction_type' = 'RAMEZ UPDATED YOU MF' WHERE id = 86");
+//   // SqlDb.instance.deleteTable("UsAccTransaction");
+//   // int? result = await delResponse; // Wait for the result of delResponse
+
+//   print(readTableRes);
+//   // print(response);
+//   // print("Delete value: $result");
+
+//   await SqlDb.instance.getRowById("UsAccTransaction", 86);
+  Navigator.push(
+    context,
+    MaterialPageRoute(builder: (context) => DbOperationsScreen()),
   );
-""";
-
-  String insertQueryFinancialAccount = """INSERT INTO $bankAccountTableRM (
-        ${BankAccountFieldsRM.name},
-        ${BankAccountFieldsRM.symbol},
-        ${BankAccountFieldsRM.color},
-        ${BankAccountFieldsRM.startingValue},
-        ${BankAccountFieldsRM.active},
-        ${BankAccountFieldsRM.mainAccount},
-        ${BankAccountFieldsRM.createdAt},
-        ${BankAccountFieldsRM.updatedAt}
-  ) VALUES (
-    '0', '0','0','0','0','0','0','0'
-  );
-""";
-
-  String insertUsAccTransactionQuery = """
-  INSERT INTO $transactionTableRM (
-        ${TransactionFieldsRM.date},
-        ${TransactionFieldsRM.amount},
-        ${TransactionFieldsRM.type},
-        ${TransactionFieldsRM.note},
-        ${TransactionFieldsRM.idCategory},
-        ${TransactionFieldsRM.idBankAccount},
-        ${TransactionFieldsRM.idBankAccountTransfer},
-        ${TransactionFieldsRM.recurring},
-        ${TransactionFieldsRM.recurrencyType},
-        ${TransactionFieldsRM.recurrencyPayDay},
-        ${TransactionFieldsRM.recurrencyFrom},
-        ${TransactionFieldsRM.recurrencyTo},
-        ${TransactionFieldsRM.createdAt},
-        ${TransactionFieldsRM.updatedAt}
-  ) VALUES (
-    'date_value', '500', '${TransactionFieldsRM.typeExpenses}', 'note_value', 'idCategory_value', 
-    'idBankAccount_value', 'idBankAccountTransfer_value', '0', 
-    'recurrencyType_value', 'recurrencyPayDay_value', 'recurrencyFrom_value', 
-    'recurrencyTo_value', 'createdAt_value', 'updatedAt_value'
-  );
-""";
-await SqlDb.instance.insertData(insertCategory);
-  await SqlDb.instance.insertData(insertQueryFinancialAccount);
-  await SqlDb.instance.insertData(insertUsAccTransactionQuery);
-  await SqlDb.instance.updateTotals();
-  List<Map> readTableRes =
-      await SqlDb.instance.readTableData("totals");
-  // Future<int>? delResponse = await SqlDb.instance.deleteData(2, "notes");
-  // // Wait for the result of deleteData and assign it to delResponse
-  // int upRes = await SqlDb.instance.updateData(
-  //     "UPDATE 'UsAccTransaction' SET 'transaction_type' = 'RAMEZ UPDATED YOU MF' WHERE id = 86");
-  // SqlDb.instance.deleteTable("UsAccTransaction");
-  // int? result = await delResponse; // Wait for the result of delResponse
-
-  print(readTableRes);
-  // print(response);
-  // print("Delete value: $result");
-
-  await SqlDb.instance.getRowById("UsAccTransaction", 86);
 }
 
 class _StructureState extends ConsumerState<Structure> {
@@ -131,7 +138,10 @@ class _StructureState extends ConsumerState<Structure> {
           child: ElevatedButton(
             // onPressed: () => Navigator.of(context).pushNamed('/search'),
             onPressed: () {
-              insert();
+              final date = ref.read(dateProvider);
+              
+              //           context.read<DboperationsblocCubit>().insertTransaction(
+              // date, 50, TransactionFieldsRM.typeExpenses, "note");
             },
             style: ElevatedButton.styleFrom(
               elevation: 0,

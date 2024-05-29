@@ -1,3 +1,8 @@
+import 'package:accounting_app_last/newdfiles/bloc/cubit/dboperationsbloc_cubit.dart';
+import 'package:accounting_app_last/newdfiles/dboperations/DealWithDataBase.dart';
+import 'package:accounting_app_last/newdfiles/dboperations/transaction_object.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 // import '../model/bank_account.dart';
@@ -15,13 +20,18 @@ final lastTransactionsProvider = FutureProvider<List<Transaction>>((ref) async {
   return transactions;
 });
 
-final transactionTypeList = Provider<List<TransactionType>>(
-    (ref) => [TransactionType.income, TransactionType.expense, TransactionType.transfer]);
+final transactionTypeList = Provider<List<TransactionType>>((ref) => [
+      TransactionType.income,
+      TransactionType.expense,
+      TransactionType.transfer
+    ]);
 
-final transactionTypeProvider = StateProvider<TransactionType>((ref) => TransactionType.expense);
+final transactionTypeProvider =
+    StateProvider<TransactionType>((ref) => TransactionType.expense);
 final bankAccountTransferProvider = StateProvider<BankAccount?>((ref) => null);
 // Used as from account in transfer transactions
-final bankAccountProvider = StateProvider<BankAccount?>((ref) => ref.read(mainAccountProvider));
+final bankAccountProvider =
+    StateProvider<BankAccount?>((ref) => ref.read(mainAccountProvider));
 final dateProvider = StateProvider<DateTime>((ref) => DateTime.now());
 final categoryProvider = StateProvider<CategoryTransaction?>((ref) => null);
 
@@ -31,16 +41,17 @@ final intervalProvider = StateProvider<Recurrence>((ref) => Recurrence.monthly);
 final repetitionProvider = StateProvider<dynamic>((ref) => null);
 
 // Set when a transaction is selected for update
-final selectedTransactionUpdateProvider = StateProvider<Transaction?>((ref) => null);
+final selectedTransactionUpdateProvider =
+    StateProvider<Transaction?>((ref) => null);
 
 // Amount total for the transactions filtered
 final totalAmountProvider = StateProvider<num>((ref) => 0);
 
 // Filters
-final filterDateStartProvider =
-    StateProvider<DateTime>((ref) => DateTime(DateTime.now().year, DateTime.now().month, 1));
-final filterDateEndProvider =
-    StateProvider<DateTime>((ref) => DateTime(DateTime.now().year, DateTime.now().month + 1, 0));
+final filterDateStartProvider = StateProvider<DateTime>(
+    (ref) => DateTime(DateTime.now().year, DateTime.now().month, 1));
+final filterDateEndProvider = StateProvider<DateTime>(
+    (ref) => DateTime(DateTime.now().year, DateTime.now().month + 1, 0));
 final typeFilterProvider = StateProvider<Map<String, bool>>(
   (ref) => {
     'IN': false,
@@ -49,13 +60,15 @@ final typeFilterProvider = StateProvider<Map<String, bool>>(
   },
 );
 
-class AsyncTransactionsNotifier extends AutoDisposeAsyncNotifier<List<Transaction>> {
+class AsyncTransactionsNotifier
+    extends AutoDisposeAsyncNotifier<List<Transaction>> {
   @override
   Future<List<Transaction>> build() async {
     return _getTransactions();
   }
 
-  Future<List<Transaction>> _getTransactions({int? limit, bool update = false}) async {
+  Future<List<Transaction>> _getTransactions(
+      {int? limit, bool update = false}) async {
     if (update) {
       ref.invalidate(lastTransactionsProvider);
       // ignore: unused_result
@@ -65,8 +78,8 @@ class AsyncTransactionsNotifier extends AutoDisposeAsyncNotifier<List<Transactio
     }
     final dateStart = ref.watch(filterDateStartProvider);
     final dateEnd = ref.watch(filterDateEndProvider);
-    final transactions = await TransactionMethods()
-        .selectAll(dateRangeStart: dateStart, dateRangeEnd: dateEnd, limit: limit);
+    final transactions = await TransactionMethods().selectAll(
+        dateRangeStart: dateStart, dateRangeEnd: dateEnd, limit: limit);
 
     ref.read(totalAmountProvider.notifier).state = transactions.fold<num>(
         0,
@@ -81,7 +94,8 @@ class AsyncTransactionsNotifier extends AutoDisposeAsyncNotifier<List<Transactio
   Future<List<Transaction>> getMonthlyTransactions() async {
     final now = DateTime.now();
     final firstDayOfMonth = DateTime(now.year, now.month, 1);
-    final transactions = await TransactionMethods().selectAll(dateRangeStart: firstDayOfMonth, dateRangeEnd: now);
+    final transactions = await TransactionMethods()
+        .selectAll(dateRangeStart: firstDayOfMonth, dateRangeEnd: now);
 
     return transactions;
   }
@@ -93,7 +107,7 @@ class AsyncTransactionsNotifier extends AutoDisposeAsyncNotifier<List<Transactio
     });
   }
 
-  Future<void> addTransaction(num amount, String label) async {
+  Future<void> addTransactionRM(num amount, String label) async {
     state = const AsyncValue.loading();
 
     final type = ref.read(transactionTypeProvider);
@@ -118,6 +132,41 @@ class AsyncTransactionsNotifier extends AutoDisposeAsyncNotifier<List<Transactio
       await TransactionMethods().insert(transaction);
       return _getTransactions(update: true);
     });
+  }
+
+  Future<void> addTransaction(
+      BuildContext context, num amount, String label,String transactionType) async {
+    // Set the state to loading if needed
+    // state = const AsyncValue.loading();
+
+    final date = ref.read(dateProvider);
+    final bankAccount = ref.read(bankAccountProvider)!;
+    final bankAccountTransfer = ref.read(bankAccountTransferProvider);
+    final category = ref.read(categoryProvider);
+    final recurring = ref.read(selectedRecurringPayProvider);
+    print("adding");
+
+    // Call the Cubit method to insert the transaction
+    // context.read<DboperationsblocCubit>().insertTransaction(date, amount,TransactionFieldsRM.typeExpenses, label);
+
+    // Handle other logic or state updates if necessary
+    TransactionRM transaction = TransactionRM(
+      date: date,
+      amount: amount,
+      type: transactionType,
+      note: label,
+      idBankAccount: bankAccount.id!,
+      idBankAccountTransfer: bankAccountTransfer?.id,
+      idCategory: category?.id,
+      recurring: recurring,
+    );
+
+    context.read<DboperationsblocCubit>().insertTransaction(transaction);
+
+    // state = await AsyncValue.guard(() async {
+    //   await TransactionMethods().insert(transaction);
+    //   return _getTransactions(update: true);
+    // });
   }
 
   Future<void> updateTransaction(num amount, String label) async {
@@ -152,19 +201,21 @@ class AsyncTransactionsNotifier extends AutoDisposeAsyncNotifier<List<Transactio
     if (transaction.type != TransactionType.transfer) {
       if (transaction.idCategory != null) {
         ref.read(categoryProvider.notifier).state =
-            await CategoryTransactionMethods().selectById(transaction.idCategory!);
+            await CategoryTransactionMethods()
+                .selectById(transaction.idCategory!);
       }
     }
-    ref.read(bankAccountProvider.notifier).state =
-        accountList.value!.firstWhere((element) => element.id == transaction.idBankAccount);
+    ref.read(bankAccountProvider.notifier).state = accountList.value!
+        .firstWhere((element) => element.id == transaction.idBankAccount);
     ref.read(bankAccountTransferProvider.notifier).state =
         transaction.type == TransactionType.transfer
-            ? accountList.value!
-                .firstWhere((element) => element.id == transaction.idBankAccountTransfer)
+            ? accountList.value!.firstWhere(
+                (element) => element.id == transaction.idBankAccountTransfer)
             : null;
     ref.read(transactionTypeProvider.notifier).state = transaction.type;
     ref.read(dateProvider.notifier).state = transaction.date;
-    ref.read(selectedRecurringPayProvider.notifier).state = transaction.recurring;
+    ref.read(selectedRecurringPayProvider.notifier).state =
+        transaction.recurring;
   }
 
   Future<void> deleteTransaction(int transactionId) async {
@@ -197,7 +248,7 @@ class AsyncTransactionsNotifier extends AutoDisposeAsyncNotifier<List<Transactio
   }
 }
 
-final transactionsProvider =
-    AsyncNotifierProvider.autoDispose<AsyncTransactionsNotifier, List<Transaction>>(() {
+final transactionsProvider = AsyncNotifierProvider.autoDispose<
+    AsyncTransactionsNotifier, List<Transaction>>(() {
   return AsyncTransactionsNotifier();
 });

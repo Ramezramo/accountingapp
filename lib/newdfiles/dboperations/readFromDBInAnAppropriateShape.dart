@@ -1,5 +1,5 @@
-import 'package:accounting_app_last/database/nw_fls/DealWithDataBase.dart';
-import 'package:accounting_app_last/database/nw_fls/financialaccount.dart';
+import 'package:accounting_app_last/newdfiles/dboperations/DealWithDataBase.dart';
+import 'package:accounting_app_last/newdfiles/dboperations/financialaccount.dart';
 import 'package:flutter/foundation.dart';
 import 'package:sqflite/sqflite.dart';
 

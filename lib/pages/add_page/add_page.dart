@@ -1,13 +1,16 @@
 import 'dart:io' show Platform;
 
+import 'package:accounting_app_last/newdfiles/dboperations/transaction_object.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../constants/functions.dart';
 import '../../constants/style.dart';
 // import '../../model/transaction.dart';
 import '../../model/ol_fls/transaction.dart';
+import '../../newdfiles/bloc/cubit/dboperationsbloc_cubit.dart';
 import '../../providers/transactions_provider.dart';
 import "widgets/account_selector.dart";
 import 'widgets/amount_section.dart';
@@ -22,6 +25,8 @@ class AddPage extends ConsumerStatefulWidget {
   @override
   ConsumerState<AddPage> createState() => _AddPageState();
 }
+
+AsyncTransactionsNotifier dd = AsyncTransactionsNotifier();
 
 class _AddPageState extends ConsumerState<AddPage> with Functions {
   final TextEditingController amountController = TextEditingController();
@@ -77,36 +82,78 @@ class _AddPageState extends ConsumerState<AddPage> with Functions {
   }
 
   void _createOrUpdateTransaction() {
-    final selectedType = ref.read(transactionTypeProvider);
-    final selectedTransaction = ref.read(selectedTransactionUpdateProvider);
+    // final selectedType = ref.read(transactionTypeProvider);
+    // final selectedTransaction = ref.read(selectedTransactionUpdateProvider);
 
     final cleanAmount = getCleanAmountString();
 
     // Check that an amount it's inserted
+    final type = ref.read(transactionTypeProvider);
+    // print(type);
+    // final date = ref.read(dateProvider);
+    // final bankAccount = ref.read(bankAccountProvider)!;
+    // final bankAccountTransfer = ref.read(bankAccountTransferProvider);
+    // final category = ref.read(categoryProvider);
+    // final recurring = ref.read(selectedRecurringPayProvider);
+
+    // context.read<DboperationsblocCubit>().insertTransaction(
+    // date, 50, TransactionFieldsRM.typeExpenses, "note");
+    // print(currencyToNum(cleanAmount));
+    // print(noteController.text);
+
     if (cleanAmount != '') {
-      if (selectedTransaction != null) {
+      if (type == TransactionType.income) {
+        // String transType = TransactionTypeRM.typeIncome;
+          // print(transType); // This will print "income"
         ref
             .read(transactionsProvider.notifier)
-            .updateTransaction(currencyToNum(cleanAmount), noteController.text)
+            .addTransaction(
+              context,
+              currencyToNum(cleanAmount),
+              noteController.text,
+              "income"
+            )
             .whenComplete(() => Navigator.of(context).pop());
-      } else {
-        if (selectedType == TransactionType.transfer) {
-          if (ref.read(bankAccountTransferProvider) != null) {
-            ref
-                .read(transactionsProvider.notifier)
-                .addTransaction(currencyToNum(cleanAmount), noteController.text)
-                .whenComplete(() => Navigator.of(context).pop());
-          }
-        } else {
-          // It's an income or an expense
-          if (ref.read(categoryProvider) != null) {
-            ref
-                .read(transactionsProvider.notifier)
-                .addTransaction(currencyToNum(cleanAmount), noteController.text)
-                .whenComplete(() => Navigator.of(context).pop());
-          }
-        }
+
+        // dd.addTransaction();
+      } else if (type == TransactionType.expense) {
+        ref
+            .read(transactionsProvider.notifier)
+            .addTransaction(context, currencyToNum(cleanAmount),
+                noteController.text, "expenses")
+            .whenComplete(() => Navigator.of(context).pop());
       }
+
+// .addTransaction(
+//                     context, currencyToNum(cleanAmount), noteController.text)
+//       context.read<DboperationsblocCubit>().insertTransaction(
+//           "date", 50, TransactionFieldsRM.typeExpenses, "note");
+//       if (selectedTransaction != null) {
+//         ref
+//             .read(transactionsProvider.notifier)
+//             .updateTransaction(currencyToNum(cleanAmount), noteController.text)
+//             .whenComplete(() => Navigator.of(context).pop());
+//       } else {
+//         if (selectedType == TransactionType.transfer) {
+//           if (ref.read(bankAccountTransferProvider) != null) {
+//             ref
+//                 .read(transactionsProvider.notifier)
+//                 .addTransaction(
+//                     context, currencyToNum(cleanAmount), noteController.text)
+//                 .whenComplete(() => Navigator.of(context).pop());
+//           }
+//         } else {
+//           // It's an income or an expense
+
+//           if (ref.read(categoryProvider) != null) {
+//             ref
+//                 .read(transactionsProvider.notifier)
+//                 .addTransaction(
+//                     context, currencyToNum(cleanAmount), noteController.text)
+//                 .whenComplete(() => Navigator.of(context).pop());
+//           }
+      // }
+      // }
     }
   }
 
@@ -120,14 +167,17 @@ class _AddPageState extends ConsumerState<AddPage> with Functions {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          (selectedTransaction != null) ? "Editing transaction" : "New transaction",
+          (selectedTransaction != null)
+              ? "Editing transaction"
+              : "New transaction",
         ),
         leadingWidth: 100,
         leading: TextButton(
           onPressed: () => Navigator.pop(context),
           child: Text(
             'Cancel',
-            style: Theme.of(context).textTheme.titleMedium!.copyWith(color: blue5),
+            style:
+                Theme.of(context).textTheme.titleMedium!.copyWith(color: blue5),
           ),
         ),
         actions: [
@@ -254,8 +304,9 @@ class _AddPageState extends ConsumerState<AddPage> with Functions {
                                   minimumYear: 2015,
                                   maximumYear: 2050,
                                   mode: CupertinoDatePickerMode.date,
-                                  onDateTimeChanged: (date) =>
-                                      ref.read(dateProvider.notifier).state = date,
+                                  onDateTimeChanged: (date) => ref
+                                      .read(dateProvider.notifier)
+                                      .state = date,
                                 ),
                               ),
                             );
@@ -267,7 +318,8 @@ class _AddPageState extends ConsumerState<AddPage> with Functions {
                               lastDate: DateTime(2050),
                             );
                             if (pickedDate != null) {
-                              ref.read(dateProvider.notifier).state = pickedDate;
+                              ref.read(dateProvider.notifier).state =
+                                  pickedDate;
                             }
                           }
                         },
@@ -307,14 +359,15 @@ class _AddPageState extends ConsumerState<AddPage> with Functions {
                   onPressed: _createOrUpdateTransaction,
                   style: TextButton.styleFrom(
                     backgroundColor: Theme.of(context).colorScheme.secondary,
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8)),
                   ),
                   child: Text(
-                    selectedTransaction != null ? "UPDATE TRANSACTION" : "ADD TRANSACTION",
-                    style: Theme.of(context)
-                        .textTheme
-                        .bodyLarge!
-                        .copyWith(color: Theme.of(context).colorScheme.background),
+                    selectedTransaction != null
+                        ? "UPDATE TRANSACTION"
+                        : "ADD TRANSACTION",
+                    style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                        color: Theme.of(context).colorScheme.background),
                   ),
                 ),
               ),

@@ -8,7 +8,8 @@ import '../../constants/functions.dart';
 import '../../constants/style.dart';
 import '../../providers/currency_provider.dart';
 
-final showAccountIconsProvider = StateProvider.autoDispose<bool>((ref) => false);
+final showAccountIconsProvider =
+    StateProvider.autoDispose<bool>((ref) => false);
 
 class AddAccount extends ConsumerStatefulWidget {
   const AddAccount({super.key});
@@ -47,7 +48,9 @@ class _AddAccountState extends ConsumerState<AddAccount> with Functions {
 
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.background,
-      appBar: AppBar(title: Text("${selectedAccount == null ? "New" : "Edit"} account")),
+      appBar: AppBar(
+          title: Text("${selectedAccount == null ? "New" : "Edit"} account")),
+          // this page it can make two things like add new or edit existed
       body: Stack(
         children: [
           SingleChildScrollView(
@@ -55,7 +58,8 @@ class _AddAccountState extends ConsumerState<AddAccount> with Functions {
               children: [
                 Container(
                   width: double.infinity,
-                  margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
+                  margin:
+                      const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
                   padding: const EdgeInsets.fromLTRB(16, 12, 16, 0),
                   decoration: BoxDecoration(
                     color: Theme.of(context).colorScheme.surface,
@@ -66,20 +70,24 @@ class _AddAccountState extends ConsumerState<AddAccount> with Functions {
                     children: [
                       Text(
                         "NAME",
-                        style: Theme.of(context)
-                            .textTheme
-                            .labelLarge!
-                            .copyWith(color: Theme.of(context).colorScheme.primary),
+                        style: Theme.of(context).textTheme.labelLarge!.copyWith(
+                            color: Theme.of(context).colorScheme.primary),
                       ),
                       TextField(
                         controller: nameController,
                         decoration: InputDecoration(
                           hintText: "Account name",
-                          hintStyle: Theme.of(context).textTheme.titleLarge!.copyWith(color: grey2),
+                          hintStyle: Theme.of(context)
+                              .textTheme
+                              .titleLarge!
+                              .copyWith(color: grey2),
                           border: InputBorder.none,
                           contentPadding: const EdgeInsets.all(0),
                         ),
-                        style: Theme.of(context).textTheme.titleLarge!.copyWith(color: grey1),
+                        style: Theme.of(context)
+                            .textTheme
+                            .titleLarge!
+                            .copyWith(color: grey1),
                       )
                     ],
                   ),
@@ -87,7 +95,8 @@ class _AddAccountState extends ConsumerState<AddAccount> with Functions {
                 Container(
                   width: double.infinity,
                   margin: const EdgeInsets.symmetric(horizontal: 16),
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                   decoration: BoxDecoration(
                     color: Theme.of(context).colorScheme.surface,
                     borderRadius: BorderRadius.circular(4),
@@ -101,15 +110,19 @@ class _AddAccountState extends ConsumerState<AddAccount> with Functions {
                           style: Theme.of(context)
                               .textTheme
                               .labelLarge!
-                              .copyWith(color: Theme.of(context).colorScheme.primary),
+                              .copyWith(
+                                  color: Theme.of(context).colorScheme.primary),
                         ),
                       ),
                       const SizedBox(height: 20),
                       Material(
                         color: Colors.transparent,
                         child: InkWell(
-                          borderRadius: const BorderRadius.all(Radius.circular(90)),
-                          onTap: () => ref.read(showAccountIconsProvider.notifier).state = true,
+                          borderRadius:
+                              const BorderRadius.all(Radius.circular(90)),
+                          onTap: () => ref
+                              .read(showAccountIconsProvider.notifier)
+                              .state = true,
                           child: Ink(
                             decoration: BoxDecoration(
                               shape: BoxShape.circle,
@@ -130,27 +143,34 @@ class _AddAccountState extends ConsumerState<AddAccount> with Functions {
                         style: Theme.of(context)
                             .textTheme
                             .labelMedium!
-                            .copyWith(color: Theme.of(context).colorScheme.primary),
+                            .copyWith(
+                                color: Theme.of(context).colorScheme.primary),
                       ),
                       const SizedBox(height: 12),
-                      if (showAccountIcons) const Divider(height: 1, color: grey2),
+                      if (showAccountIcons)
+                        const Divider(height: 1, color: grey2),
                       if (showAccountIcons)
                         Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 16, vertical: 8),
                           color: Theme.of(context).colorScheme.surface,
                           child: Column(
                             children: [
                               Align(
                                 alignment: Alignment.topRight,
                                 child: TextButton(
-                                  onPressed: () =>
-                                      ref.read(showAccountIconsProvider.notifier).state = false,
+                                  onPressed: () => ref
+                                      .read(showAccountIconsProvider.notifier)
+                                      .state = false,
                                   child: Text(
                                     "Done",
                                     style: Theme.of(context)
                                         .textTheme
                                         .bodyLarge!
-                                        .copyWith(color: Theme.of(context).colorScheme.secondary),
+                                        .copyWith(
+                                            color: Theme.of(context)
+                                                .colorScheme
+                                                .secondary),
                                   ),
                                 ),
                               ),
@@ -158,28 +178,39 @@ class _AddAccountState extends ConsumerState<AddAccount> with Functions {
                                 itemCount: accountIconList.length,
                                 shrinkWrap: true,
                                 physics: const NeverScrollableScrollPhysics(),
-                                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                                    crossAxisCount: 6),
+                                gridDelegate:
+                                    const SliverGridDelegateWithFixedCrossAxisCount(
+                                        crossAxisCount: 6),
                                 itemBuilder: (context, index) {
                                   IconData accountIconData =
                                       accountIconList.values.elementAt(index);
-                                  String accountIconName = accountIconList.keys.elementAt(index);
+                                  String accountIconName =
+                                      accountIconList.keys.elementAt(index);
                                   return GestureDetector(
-                                    onTap: () => ref.read(accountIconProvider.notifier).state =
-                                        accountIconName,
+                                    onTap: () => ref
+                                        .read(accountIconProvider.notifier)
+                                        .state = accountIconName,
                                     child: Container(
                                       margin: const EdgeInsets.all(4),
                                       decoration: BoxDecoration(
-                                          color: accountIconList[accountIcon] == accountIconData
-                                              ? Theme.of(context).colorScheme.secondary
-                                              : Theme.of(context).colorScheme.surface,
+                                          color: accountIconList[accountIcon] ==
+                                                  accountIconData
+                                              ? Theme.of(context)
+                                                  .colorScheme
+                                                  .secondary
+                                              : Theme.of(context)
+                                                  .colorScheme
+                                                  .surface,
                                           // borderRadius: const BorderRadius.all(Radius.circular(4)),
                                           shape: BoxShape.circle),
                                       child: Icon(
                                         accountIconData,
-                                        color: accountIconList[accountIcon] == accountIconData
+                                        color: accountIconList[accountIcon] ==
+                                                accountIconData
                                             ? Colors.white
-                                            : Theme.of(context).colorScheme.primary,
+                                            : Theme.of(context)
+                                                .colorScheme
+                                                .primary,
                                         size: 24,
                                       ),
                                     ),
@@ -197,20 +228,32 @@ class _AddAccountState extends ConsumerState<AddAccount> with Functions {
                           scrollDirection: Axis.horizontal,
                           physics: const BouncingScrollPhysics(),
                           padding: const EdgeInsets.symmetric(horizontal: 16),
-                          separatorBuilder: (context, index) => const SizedBox(width: 16),
+                          separatorBuilder: (context, index) =>
+                              const SizedBox(width: 16),
                           itemBuilder: (context, index) {
                             Color color = accountColorListTheme[index];
                             return GestureDetector(
-                              onTap: () => ref.read(accountColorProvider.notifier).state = index,
+                              onTap: () => ref
+                                  .read(accountColorProvider.notifier)
+                                  .state = index,
                               child: Container(
-                                height: accountColorListTheme[accountColor] == color ? 38 : 32,
-                                width: accountColorListTheme[accountColor] == color ? 38 : 32,
+                                height:
+                                    accountColorListTheme[accountColor] == color
+                                        ? 38
+                                        : 32,
+                                width:
+                                    accountColorListTheme[accountColor] == color
+                                        ? 38
+                                        : 32,
                                 decoration: BoxDecoration(
                                   shape: BoxShape.circle,
                                   color: color,
-                                  border: accountColorListTheme[accountColor] == color
+                                  border: accountColorListTheme[accountColor] ==
+                                          color
                                       ? Border.all(
-                                          color: Theme.of(context).colorScheme.primary,
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .primary,
                                           width: 3,
                                         )
                                       : null,
@@ -227,7 +270,8 @@ class _AddAccountState extends ConsumerState<AddAccount> with Functions {
                         style: Theme.of(context)
                             .textTheme
                             .labelMedium!
-                            .copyWith(color: Theme.of(context).colorScheme.primary),
+                            .copyWith(
+                                color: Theme.of(context).colorScheme.primary),
                       ),
                       const SizedBox(height: 12),
                     ],
@@ -280,7 +324,8 @@ class _AddAccountState extends ConsumerState<AddAccount> with Functions {
                   ),
                 Container(
                   width: double.infinity,
-                  margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
+                  margin:
+                      const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
                   padding: const EdgeInsets.symmetric(horizontal: 16),
                   decoration: BoxDecoration(
                     color: Theme.of(context).colorScheme.surface,
@@ -299,12 +344,16 @@ class _AddAccountState extends ConsumerState<AddAccount> with Functions {
                               style: Theme.of(context)
                                   .textTheme
                                   .bodyLarge!
-                                  .copyWith(color: Theme.of(context).colorScheme.primary),
+                                  .copyWith(
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .primary),
                             ),
                             CupertinoSwitch(
                               value: accountMainSwitch,
-                              onChanged: (value) =>
-                                  ref.read(accountMainSwitchProvider.notifier).state = value,
+                              onChanged: (value) => ref
+                                  .read(accountMainSwitchProvider.notifier)
+                                  .state = value,
                             ),
                           ],
                         ),
@@ -320,12 +369,16 @@ class _AddAccountState extends ConsumerState<AddAccount> with Functions {
                               style: Theme.of(context)
                                   .textTheme
                                   .bodyLarge!
-                                  .copyWith(color: Theme.of(context).colorScheme.primary),
+                                  .copyWith(
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .primary),
                             ),
                             CupertinoSwitch(
                               value: countNetWorth,
-                              onChanged: (value) =>
-                                  ref.read(countNetWorthSwitchProvider.notifier).state = value,
+                              onChanged: (value) => ref
+                                  .read(countNetWorthSwitchProvider.notifier)
+                                  .state = value,
                             ),
                           ],
                         ),
@@ -336,7 +389,8 @@ class _AddAccountState extends ConsumerState<AddAccount> with Functions {
                 if (selectedAccount != null)
                   Container(
                     width: double.infinity,
-                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 16, vertical: 16),
                     child: TextButton.icon(
                       onPressed: () => ref
                           .read(accountsProvider.notifier)
@@ -349,7 +403,10 @@ class _AddAccountState extends ConsumerState<AddAccount> with Functions {
                       icon: const Icon(Icons.delete_outlined, color: red),
                       label: Text(
                         "Delete account",
-                        style: Theme.of(context).textTheme.bodyLarge!.copyWith(color: red),
+                        style: Theme.of(context)
+                            .textTheme
+                            .bodyLarge!
+                            .copyWith(color: red),
                       ),
                     ),
                   ),
@@ -380,6 +437,7 @@ class _AddAccountState extends ConsumerState<AddAccount> with Functions {
                 ),
                 child: TextButton(
                   onPressed: () async {
+                    
                     if (selectedAccount != null) {
                       ref
                           .read(accountsProvider.notifier)
@@ -388,20 +446,23 @@ class _AddAccountState extends ConsumerState<AddAccount> with Functions {
                     } else {
                       ref
                           .read(accountsProvider.notifier)
-                          .addAccount(nameController.text, startingValueController.text.isEmpty ? null : currencyToNum(startingValueController.text))
+                          .addAccount(
+                              nameController.text,
+                              startingValueController.text.isEmpty
+                                  ? null
+                                  : currencyToNum(startingValueController.text))
                           .whenComplete(() => Navigator.of(context).pop());
                     }
                   },
                   style: TextButton.styleFrom(
                     backgroundColor: Theme.of(context).colorScheme.secondary,
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8)),
                   ),
                   child: Text(
                     "${selectedAccount == null ? "CREATE" : "UPDATE"} ACCOUNT",
-                    style: Theme.of(context)
-                        .textTheme
-                        .bodyLarge!
-                        .copyWith(color: Theme.of(context).colorScheme.background),
+                    style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                        color: Theme.of(context).colorScheme.background),
                   ),
                 ),
               ),
