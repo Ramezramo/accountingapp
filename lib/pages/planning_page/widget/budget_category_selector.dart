@@ -5,14 +5,15 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../constants/constants.dart';
 import '../../../model/ol_fls/budget.dart';
 import '../../../model/ol_fls/category_transaction.dart';
+import '../../../newdfiles/dboperations/categoryobject.dart';
 // import '../../../model/budget.dart';
 // import '../../../model/category_transaction.dart';
 
 class BudgetCategorySelector extends ConsumerStatefulWidget {
-  final List<CategoryTransaction> categories;
+  final List<CategoryTransactionRM> categories;
   final Budget budget;
   final List<String> categoriesAlreadyUsed;
-  final CategoryTransaction initSelectedCategory;
+  final CategoryTransactionRM initSelectedCategory;
   final Function(Budget) onBudgetChanged;
 
   BudgetCategorySelector(
@@ -29,7 +30,7 @@ class BudgetCategorySelector extends ConsumerStatefulWidget {
 }
 
 class _BudgetCategorySelector extends ConsumerState<BudgetCategorySelector> {
-  late CategoryTransaction selectedCategory = widget.initSelectedCategory;
+  late CategoryTransactionRM selectedCategory = widget.initSelectedCategory;
   final TextEditingController _controller = TextEditingController();
 
   void _modifyBudget() {
@@ -66,23 +67,23 @@ class _BudgetCategorySelector extends ConsumerState<BudgetCategorySelector> {
                       decoration: BoxDecoration(
                           color: Colors.white,
                           borderRadius: BorderRadius.circular(8)),
-                      child: DropdownButton<CategoryTransaction>(
+                      child: DropdownButton<CategoryTransactionRM>(
                         value: selectedCategory,
                         underline: const SizedBox(),
                         isExpanded: true,
                         items: widget.categories
                           .where((e) => e.name == selectedCategory.name || !widget.categoriesAlreadyUsed.contains(e.name))
-                            .map((CategoryTransaction category) {
+                            .map((CategoryTransactionRM category) {
                           IconData? icon = iconList[category.symbol];
-                          return DropdownMenuItem<CategoryTransaction>(
+                          return DropdownMenuItem<CategoryTransactionRM>(
                               value: category,
                               child: Row(
                                 children: [Icon(icon), const SizedBox(width: 15), Text(category.name)],
                               ));
                         }).toList(),
-                        onChanged: (CategoryTransaction? newValue) {
+                        onChanged: (CategoryTransactionRM? newValue) {
                           setState(() {
-                            selectedCategory = newValue!;
+                            selectedCategory = newValue! ;
                             _modifyBudget();
                           });
                         },

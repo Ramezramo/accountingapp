@@ -3,11 +3,14 @@ import '../constants/constants.dart';
 // import '../model/bank_account.dart';
 import 'package:fl_chart/fl_chart.dart';
 
+// import '../model/ol_fls/bank_account.dart';
 import '../model/ol_fls/bank_account.dart';
+import '../newdfiles/bloc/cubit/dboperationsbloc_cubit.dart';
+import '../newdfiles/dboperations/financialaccount.dart';
 
-final mainAccountProvider = StateProvider<BankAccount?>((ref) => null);
+final mainAccountProvider = StateProvider<BankAccountRM?>((ref) => null);
 
-final selectedAccountProvider = StateProvider<BankAccount?>((ref) => null);
+final selectedAccountProvider = StateProvider<BankAccountRM?>((ref) => null);
 final accountIconProvider =
     StateProvider<String>((ref) => accountIconList.keys.first);
 final accountColorProvider = StateProvider<int>((ref) => 0);
@@ -18,31 +21,31 @@ final selectedAccountCurrentMonthDailyBalanceProvider =
 final selectedAccountLastTransactions = StateProvider<List>((ref) => const []);
 final filterAccountProvider = StateProvider<Map<int, bool>>((ref) => {});
 
-class AsyncAccountsNotifier extends AsyncNotifier<List<BankAccount>> {
+class AsyncAccountsNotifier extends AsyncNotifier<List<BankAccountRM>> {
   @override
-  Future<List<BankAccount>> build() async {
+  Future<List<BankAccountRM>> build() async {
     ref.watch(mainAccountProvider.notifier).state = await _getMainAccount();
-    List<BankAccount> accounts = await _getAccounts();
+    List<BankAccountRM> accounts = await _getAccounts();
 
-    for (BankAccount account in accounts) {
+    for (BankAccountRM account in accounts) {
       ref.watch(filterAccountProvider.notifier).state[account.id!] = false;
     }
 
     return accounts;
   }
 
-  Future<List<BankAccount>> _getAccounts() async {
+  Future<List<BankAccountRM>> _getAccounts() async {
     final accounts = await BankAccountMethods().selectAll();
     return accounts;
   }
 
-  Future<BankAccount?> _getMainAccount() async {
+  Future<BankAccountRM?> _getMainAccount() async {
     final account = await BankAccountMethods().selectMain();
     return account;
   }
 
-  Future<void> addAccount(String name, num? startingValue) async {
-    BankAccount account = BankAccount(
+  Future<void> addAccount(context, String name, num? startingValue) async {
+    BankAccountRM account = BankAccountRM(
       name: name,
       symbol: ref.read(accountIconProvider),
       color: ref.read(accountColorProvider),
@@ -50,34 +53,35 @@ class AsyncAccountsNotifier extends AsyncNotifier<List<BankAccount>> {
       active: ref.read(countNetWorthSwitchProvider),
       mainAccount: ref.read(accountMainSwitchProvider),
     );
+    context.read<DboperationsblocCubit>().insertBankAccount(account);
 
-    state = const AsyncValue.loading();
-    state = await AsyncValue.guard(() async {
-      await BankAccountMethods().insert(account);
-      return _getAccounts();
-    });
+    // state = const AsyncValue.loading();
+    // state = await AsyncValue.guard(() async {
+    //   await BankAccountMethods().insert(account);
+    //   return _getAccounts();
+    // });
   }
 
   Future<void> updateAccount(String name) async {
-    BankAccount account = ref.read(selectedAccountProvider)!.copy(
-          name: name,
-          symbol: ref.read(accountIconProvider),
-          color: ref.read(accountColorProvider),
-          active: ref.read(countNetWorthSwitchProvider),
-          mainAccount: ref.read(accountMainSwitchProvider),
-        );
+    // BankAccount account = ref.read(selectedAccountProvider)!.copy(
+    //       name: name,
+    //       symbol: ref.read(accountIconProvider),
+    //       color: ref.read(accountColorProvider),
+    //       active: ref.read(countNetWorthSwitchProvider),
+    //       mainAccount: ref.read(accountMainSwitchProvider),
+    //     );
 
-    state = const AsyncValue.loading();
-    state = await AsyncValue.guard(() async {
-      await BankAccountMethods().updateItem(account);
-      if (account.mainAccount) {
-        ref.read(mainAccountProvider.notifier).state = account;
-      }
-      return _getAccounts();
-    });
+    // state = const AsyncValue.loading();
+    // state = await AsyncValue.guard(() async {
+    //   await BankAccountMethods().updateItem(account);
+    //   if (account.mainAccount) {
+    //     ref.read(mainAccountProvider.notifier).state = account;
+    //   }
+    //   return _getAccounts();
+    // });
   }
 
-  Future<void> selectedAccount(BankAccount account) async {
+  Future<void> selectedAccount(BankAccountRM account) async {
     ref.read(selectedAccountProvider.notifier).state = account;
     ref.read(accountIconProvider.notifier).state = account.symbol;
     ref.read(accountColorProvider.notifier).state = account.color;
@@ -120,6 +124,6 @@ class AsyncAccountsNotifier extends AsyncNotifier<List<BankAccount>> {
 }
 
 final accountsProvider =
-    AsyncNotifierProvider<AsyncAccountsNotifier, List<BankAccount>>(() {
+    AsyncNotifierProvider<AsyncAccountsNotifier, List<BankAccountRM>>(() {
   return AsyncAccountsNotifier();
 });

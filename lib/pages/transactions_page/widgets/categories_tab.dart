@@ -8,6 +8,7 @@ import '../../../custom_widgets/transaction_type_button.dart';
 // import '../../../model/transaction.dart';
 import '../../../model/ol_fls/category_transaction.dart';
 import '../../../model/ol_fls/transaction.dart';
+import '../../../newdfiles/dboperations/categoryobject.dart';
 import '../../../providers/categories_provider.dart';
 import '../../../providers/transactions_provider.dart';
 import 'categories_pie_chart.dart';
@@ -84,10 +85,10 @@ class _CategoriesTabState extends ConsumerState<CategoriesTab> with Functions {
             const SizedBox(height: 16),
             categories.when(
               data: (data) {
-                List<CategoryTransaction> categoryIncomeList = data
+                List<CategoryTransactionRM> categoryIncomeList = data
                     .where((category) => categoryToAmountIncome.containsKey(category.id))
                     .toList();
-                List<CategoryTransaction> categoryExpenseList = data
+                List<CategoryTransactionRM> categoryExpenseList = data
                     .where((category) => categoryToAmountExpense.containsKey(category.id))
                     .toList();
                 return transactionType == TransactionType.income
@@ -112,7 +113,7 @@ class _CategoriesTabState extends ConsumerState<CategoriesTab> with Functions {
                                 itemCount: categoryIncomeList.length,
                                 separatorBuilder: (context, index) => const SizedBox(height: 10),
                                 itemBuilder: (context, index) {
-                                  CategoryTransaction category = categoryIncomeList[index];
+                                  CategoryTransactionRM category = categoryIncomeList[index];
                                   return CategoryListTile(
                                     category: category,
                                     transactions: categoryToTransactionsIncome[category.id] ?? [],
@@ -147,7 +148,7 @@ class _CategoriesTabState extends ConsumerState<CategoriesTab> with Functions {
                                 itemCount: categoryExpenseList.length,
                                 separatorBuilder: (context, index) => const SizedBox(height: 10),
                                 itemBuilder: (context, index) {
-                                  CategoryTransaction category = categoryExpenseList[index];
+                                  CategoryTransactionRM category = categoryExpenseList[index];
                                   return CategoryListTile(
                                     category: category,
                                     transactions: categoryToTransactionsExpense[category.id] ?? [],

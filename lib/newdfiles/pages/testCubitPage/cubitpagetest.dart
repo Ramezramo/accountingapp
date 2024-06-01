@@ -7,8 +7,6 @@ import '../../bloc/cubit/dboperationsbloc_cubit.dart';
 import '../../dboperations/DealWithDataBase.dart';
 // import 'dboperationsbloc_cubit.dart';
 
-
-
 class DbOperationsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -19,12 +17,12 @@ class DbOperationsScreen extends StatelessWidget {
           builder: (context, state) {
             if (state is DboperationsblocInitial) {
               return Text('Press the button to perform DB operation');
-            } else if (state is DboperationsblocLoading) {
+            } else if (state is AddingTransactionblocLoading) {
               return CircularProgressIndicator();
-            } else if (state is DboperationsblocSuccess) {
+            } else if (state is AddingTransactionblocSuccess) {
               return Text('Success: ${state.result}',
                   style: TextStyle(fontSize: 24));
-            } else if (state is DboperationsblocFailure) {
+            } else if (state is AddingTransactionblocFailure) {
               return Text('Error: ${state.error}',
                   style: TextStyle(color: Colors.red));
             }

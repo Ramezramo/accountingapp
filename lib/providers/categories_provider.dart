@@ -1,39 +1,44 @@
+
+import 'package:accounting_app_last/newdfiles/bloc/cubit/dboperationsbloc_cubit.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../constants/constants.dart';
 import '../model/ol_fls/category_transaction.dart';
+import '../newdfiles/dboperations/DealWithDataBase.dart';
+import '../newdfiles/dboperations/categoryobject.dart';
 
-final selectedCategoryProvider = StateProvider<CategoryTransaction?>((ref) => null);
+final selectedCategoryProvider = StateProvider<CategoryTransactionRM?>((ref) => null);
 final categoryIconProvider = StateProvider<String>((ref) => iconList.keys.first);
 final categoryColorProvider = StateProvider<int>((ref) => 0);
 
-class AsyncCategoriesNotifier extends AsyncNotifier<List<CategoryTransaction>> {
+class AsyncCategoriesNotifier extends AsyncNotifier<List<CategoryTransactionRM>> {
   @override
-  Future<List<CategoryTransaction>> build() async {
+  Future<List<CategoryTransactionRM>> build() async {
     return _getCategories();
   }
 
-  Future<List<CategoryTransaction>> _getCategories() async {
-    final categories = await CategoryTransactionMethods().selectAll();
+  Future<List<CategoryTransactionRM>> _getCategories() async {
+    final categories = await SqlDb.instance.selectAllCategories();
     return categories;
   }
 
-  Future<void> addCategory(String name) async {
-    CategoryTransaction category = CategoryTransaction(
-      name: name,
-      symbol: ref.read(categoryIconProvider),
-      color: ref.read(categoryColorProvider),
-    );
+  // Future<void> addCategory(context,String name) async {
+  //   // CategoryTransactionRM category = CategoryTransactionRM(
+  //   //   name: name,
+  //   //   symbol: ref.read(categoryIconProvider),
+  //   //   color: ref.read(categoryColorProvider),
+  //   // );
+  //   // context.read<DboperationsblocCubit>().insertCategory(category);
 
-    state = const AsyncValue.loading();
-    state = await AsyncValue.guard(() async {
-      await CategoryTransactionMethods().insert(category);
-      return _getCategories();
-    });
-  }
+  //   // state = const AsyncValue.loading();
+  //   // state = await AsyncValue.guard(() async {
+  //   //   await CategoryTransactionMethods().insert(category);
+  //   //   return _getCategories();
+  //   // });
+  // }
 
   Future<void> updateCategory(String name) async {
-    CategoryTransaction category = ref.read(selectedCategoryProvider)!.copy(
+    CategoryTransactionRM category = ref.read(selectedCategoryProvider)!.copy(
       name: name,
       symbol: ref.read(categoryIconProvider),
       color: ref.read(categoryColorProvider),
@@ -46,7 +51,7 @@ class AsyncCategoriesNotifier extends AsyncNotifier<List<CategoryTransaction>> {
     });
   }
 
-  void selectedCategory(CategoryTransaction category) {
+  void selectedCategory(CategoryTransactionRM category) {
     ref.read(selectedCategoryProvider.notifier).state = category;
     ref.read(categoryIconProvider.notifier).state = category.symbol;
     ref.read(categoryColorProvider.notifier).state = category.color;
@@ -66,11 +71,11 @@ class AsyncCategoriesNotifier extends AsyncNotifier<List<CategoryTransaction>> {
     ref.invalidate(categoryColorProvider);
   }
 
-  Future<List<CategoryTransaction>> getCategories() async {
+  Future<List<CategoryTransactionRM>> getCategories() async {
     return _getCategories();
   }
 }
 
-final categoriesProvider = AsyncNotifierProvider<AsyncCategoriesNotifier, List<CategoryTransaction>>(() {
+final categoriesProvider = AsyncNotifierProvider<AsyncCategoriesNotifier, List<CategoryTransactionRM>>(() {
   return AsyncCategoriesNotifier();
 });

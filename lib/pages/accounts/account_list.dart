@@ -6,6 +6,7 @@ import '../../constants/constants.dart';
 import '../../constants/functions.dart';
 import '../../custom_widgets/default_card.dart';
 // import '../../model/bank_account.dart';
+import '../../newdfiles/dboperations/financialaccount.dart';
 import '../../providers/accounts_provider.dart';
 
 class AccountList extends ConsumerStatefulWidget {
@@ -41,7 +42,8 @@ class _AccountListState extends ConsumerState<AccountList> with Functions {
         child: Column(
           children: [
             Padding(
-              padding: const EdgeInsets.symmetric(vertical: 24.0, horizontal: 16.0),
+              padding:
+                  const EdgeInsets.symmetric(vertical: 24.0, horizontal: 16.0),
               child: Row(
                 children: [
                   Container(
@@ -72,9 +74,10 @@ class _AccountListState extends ConsumerState<AccountList> with Functions {
                 itemCount: accounts.length,
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
-                separatorBuilder: (context, index) => const SizedBox(height: 16),
+                separatorBuilder: (context, index) =>
+                    const SizedBox(height: 16),
                 itemBuilder: (context, i) {
-                  BankAccount account = accounts[i];
+                  BankAccountRM account = accounts[i];
                   IconData? icon = accountIconList[account.symbol];
                   Color? color = accountColorListTheme[account.color];
                   return DefaultCard(
@@ -82,7 +85,8 @@ class _AccountListState extends ConsumerState<AccountList> with Functions {
                       await ref
                           .read(accountsProvider.notifier)
                           .selectedAccount(account)
-                          .whenComplete(() => Navigator.of(context).pushNamed('/add-account'));
+                          .whenComplete(() =>
+                              Navigator.of(context).pushNamed('/add-account'));
                     },
                     child: Row(
                       children: [
@@ -96,7 +100,8 @@ class _AccountListState extends ConsumerState<AccountList> with Functions {
                               ? Icon(
                                   icon,
                                   size: 30.0,
-                                  color: Theme.of(context).colorScheme.background,
+                                  color:
+                                      Theme.of(context).colorScheme.background,
                                 )
                               : const SizedBox(),
                         ),
@@ -106,7 +111,8 @@ class _AccountListState extends ConsumerState<AccountList> with Functions {
                           style: Theme.of(context)
                               .textTheme
                               .titleLarge!
-                              .copyWith(color: Theme.of(context).colorScheme.primary),
+                              .copyWith(
+                                  color: Theme.of(context).colorScheme.primary),
                         ),
                       ],
                     ),

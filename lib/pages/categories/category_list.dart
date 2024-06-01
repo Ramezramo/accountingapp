@@ -7,6 +7,7 @@ import '../../../constants/functions.dart';
 import '../../../providers/categories_provider.dart';
 import '../../custom_widgets/default_card.dart';
 import '../../model/ol_fls/category_transaction.dart';
+import '../../newdfiles/dboperations/categoryobject.dart';
 
 class CategoryList extends ConsumerStatefulWidget {
   const CategoryList({super.key});
@@ -74,7 +75,7 @@ class _CategoryListState extends ConsumerState<CategoryList> with Functions {
                 physics: const NeverScrollableScrollPhysics(),
                 separatorBuilder: (context, index) => const SizedBox(height: 16),
                 itemBuilder: (context, i) {
-                  CategoryTransaction category = categorys[i];
+                  CategoryTransactionRM category = categorys[i];
                   IconData? icon = iconList[category.symbol];
                   Color? color = categoryColorListTheme[category.color];
                   return DefaultCard(

@@ -11,6 +11,7 @@ import 'package:path/path.dart';
 import '../newdfiles/bloc/cubit/dboperationsbloc_cubit.dart';
 import '../newdfiles/dboperations/categoryobject.dart';
 import '../newdfiles/pages/testCubitPage/cubitpagetest.dart';
+import '../providers/categories_provider.dart';
 import '../providers/transactions_provider.dart';
 import 'calculate_Income.dart';
 import 'planning_page/planning_page.dart';
@@ -137,9 +138,10 @@ class _StructureState extends ConsumerState<Structure> {
           padding: const EdgeInsets.only(left: 16),
           child: ElevatedButton(
             // onPressed: () => Navigator.of(context).pushNamed('/search'),
-            onPressed: () {
-              final date = ref.read(dateProvider);
-              
+            onPressed: () async {
+              final categories = await SqlDb.instance.selectAllCategories();
+              print(categories[1].id);
+
               //           context.read<DboperationsblocCubit>().insertTransaction(
               // date, 50, TransactionFieldsRM.typeExpenses, "note");
             },

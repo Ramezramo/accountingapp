@@ -1,6 +1,7 @@
 // import '../database/ol_fls/appname_database.dart';
 import 'package:accounting_app_last/database/ol_fls/appname_database.dart';
 
+import '../../newdfiles/dboperations/categoryobject.dart';
 import 'base_entity.dart';
 
 const String categoryTransactionTable = 'categoryTransaction';
@@ -91,13 +92,13 @@ class CategoryTransaction extends BaseEntity {
 }
 
 class CategoryTransactionMethods extends accounting_app_lastDatabase {
-  Future<CategoryTransaction> insert(CategoryTransaction item) async {
+  Future<CategoryTransactionRM> insert(CategoryTransactionRM item) async {
     final db = await database;
     final id = await db.insert(categoryTransactionTable, item.toJson());
     return item.copy(id: id);
   }
 
-  Future<CategoryTransaction> selectById(int id) async {
+  Future<CategoryTransactionRM> selectById(int id) async {
     final db = await database;
 
     final maps = await db.query(
@@ -108,7 +109,7 @@ class CategoryTransactionMethods extends accounting_app_lastDatabase {
     );
 
     if (maps.isNotEmpty) {
-      return CategoryTransaction.fromJson(maps.first);
+      return CategoryTransactionRM.fromJson(maps.first);
     } else {
       throw Exception('ID $id not found');
     }
@@ -121,11 +122,14 @@ class CategoryTransactionMethods extends accounting_app_lastDatabase {
 
     final result =
         await db.query(categoryTransactionTable, orderBy: orderByASC);
+    var listedResult =
+        result.map((json) => CategoryTransaction.fromJson(json)).toList();
+    
 
-    return result.map((json) => CategoryTransaction.fromJson(json)).toList();
+    return listedResult;
   }
 
-  Future<int> updateItem(CategoryTransaction item) async {
+  Future<int> updateItem(CategoryTransactionRM item) async {
     final db = await database;
 
     // You can use `rawUpdate` to write the query in SQL

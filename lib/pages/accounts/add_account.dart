@@ -1,7 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../newdfiles/bloc/cubit/dboperationsbloc_cubit.dart';
+import '../../newdfiles/dboperations/financialaccount.dart';
 import '../../providers/accounts_provider.dart';
 import '../../constants/constants.dart';
 import '../../constants/functions.dart';
@@ -38,7 +41,8 @@ class _AddAccountState extends ConsumerState<AddAccount> with Functions {
 
   @override
   Widget build(BuildContext context) {
-    final selectedAccount = ref.watch(selectedAccountProvider);
+    // final selectedAccount = ref.watch(selectedAccountProvider);
+    final selectedAccount = null;
     final accountIcon = ref.watch(accountIconProvider);
     final accountColor = ref.watch(accountColorProvider);
     final showAccountIcons = ref.watch(showAccountIconsProvider);
@@ -444,14 +448,21 @@ class _AddAccountState extends ConsumerState<AddAccount> with Functions {
                           .updateAccount(nameController.text)
                           .whenComplete(() => Navigator.of(context).pop());
                     } else {
-                      ref
-                          .read(accountsProvider.notifier)
-                          .addAccount(
-                              nameController.text,
-                              startingValueController.text.isEmpty
-                                  ? null
-                                  : currencyToNum(startingValueController.text))
-                          .whenComplete(() => Navigator.of(context).pop());
+                 String text = startingValueController.text;
+double startingValue = text.isEmpty ? 0 : double.parse(text);
+                      BankAccountRM account = BankAccountRM(
+                        name: nameController.text,
+                        symbol: ref.read(accountIconProvider),
+                        color: ref.read(accountColorProvider),
+                        startingValue: startingValue,
+                        active: ref.read(countNetWorthSwitchProvider),
+                        mainAccount: ref.read(accountMainSwitchProvider),
+                      );
+                      context
+                          .read<DboperationsblocCubit>()
+                          .insertBankAccount(account);
+
+                      Navigator.of(context).pop();
                     }
                   },
                   style: TextButton.styleFrom(

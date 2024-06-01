@@ -8,6 +8,7 @@ import '../../../constants/style.dart';
 // import '../../../model/transaction.dart';
 import '../../../model/ol_fls/category_transaction.dart';
 import '../../../model/ol_fls/transaction.dart';
+import '../../../newdfiles/dboperations/categoryobject.dart';
 import '../../../providers/currency_provider.dart';
 import 'categories_tab.dart';
 
@@ -21,7 +22,7 @@ class CategoryListTile extends ConsumerWidget {
     required this.index,
   });
 
-  final CategoryTransaction category;
+  final CategoryTransactionRM category;
   final double amount;
   final List<Transaction> transactions;
   final double percent;

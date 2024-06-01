@@ -7,6 +7,7 @@ import '../../../constants/functions.dart';
 import '../../../constants/style.dart';
 // import '../../../model/category_transaction.dart';
 import '../../../model/ol_fls/category_transaction.dart';
+import '../../../newdfiles/dboperations/categoryobject.dart';
 import '../../../providers/currency_provider.dart';
 import 'categories_tab.dart';
 
@@ -18,7 +19,7 @@ class CategoriesPieChart extends ConsumerWidget with Functions {
     super.key,
   });
 
-  final List<CategoryTransaction> categories;
+  final List<CategoryTransactionRM> categories;
   final Map<int, double> amounts;
   final double total;
 

@@ -13,6 +13,7 @@ import '../custom_widgets/transactions_list.dart';
 // import '../model/bank_account.dart';
 import '../model/ol_fls/bank_account.dart';
 import '../newdfiles/dboperations/DealWithDataBase.dart';
+import '../newdfiles/dboperations/financialaccount.dart';
 import '../providers/accounts_provider.dart';
 import '../providers/currency_provider.dart';
 import '../providers/dashboard_provider.dart';
@@ -49,16 +50,16 @@ class _HomePageState extends ConsumerState<CalculateIncomeDashboard>
               print(state);
             },
             builder: (context, state) {
-              if (state is DboperationsblocLoading) {
+              if (state is AddingTransactionblocLoading) {
                 return const CircularProgressIndicator();
-              } else if (state is DboperationsblocSuccess) {
+              } else if (state is AddingTransactionblocSuccess) {
                 print(state.result["income"]);
                 final income = state.result["income"];
                 final expense = state.result["expenses"];
                 final total = income - expense;
                 return dashBoardDataSection(context, total, currencyState,
                     income, expense, currentMonthList, lastMonthList);
-              } else if (state is DboperationsblocFailure) {
+              } else if (state is AddingTransactionblocFailure) {
                 return Text('Error: ${state.error}',
                     style: const TextStyle(color: Colors.red));
               }
@@ -150,7 +151,7 @@ class _HomePageState extends ConsumerState<CalculateIncomeDashboard>
                             ),
                           );
                         } else {
-                          BankAccount account = accounts[i];
+                          BankAccountRM account = accounts[i];
                           return AccountsSum(account: account);
                         }
                       },

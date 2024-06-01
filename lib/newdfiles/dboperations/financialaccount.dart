@@ -12,9 +12,10 @@ class BankAccountFieldsRM extends BaseEntityFields {
   static String active = 'active';
   static String mainAccount = 'mainAccount';
   static String total = 'total';
-  static String createdAt = 'CreatedAt';
-  static String updatedAt = 'UpdatedAt';
+  static String createdAt = BaseEntityFields.getCreatedAt;
+  static String updatedAt = BaseEntityFields.getUpdatedAt;
 
+  
   static final List<String> allFields = [
     id,
     name,
@@ -27,35 +28,72 @@ class BankAccountFieldsRM extends BaseEntityFields {
     updatedAt
   ];
 }
-class FinancialAccount {
-  final Object? accountIcon;
-  final Object? accountName;
-  final Object? accountBeginning;
-  final Object? mainAccount;
-  final Object? color;
-  Object? id;
 
-  FinancialAccount(
-      {required this.id,
-      required this.accountIcon,
-      required this.accountName,
-      required this.accountBeginning,
+class BankAccountRM extends BaseEntity {
+  final String name;
+  final String symbol;
+  final int color;
+  final num startingValue;
+  final bool active;
+  final bool mainAccount;
+  final num? total;
+
+  const BankAccountRM(
+      {super.id,
+      required this.name,
+      required this.symbol,
+      required this.color,
+      required this.startingValue,
+      required this.active,
       required this.mainAccount,
-      required this.color});
+      this.total,
+      super.createdAt,
+      super.updatedAt});
 
-  Map<String, dynamic> toMap() {
-    return {
-      'id': id,
-      'account_icon': accountIcon,
-      'account_name': accountName,
-      'account_beggening': accountBeginning,
-      'main_account': mainAccount,
-      'color': color.toString(), // Convert Color to string representation
-    };
-  }
+  BankAccountRM copy(
+          {int? id,
+          String? name,
+          String? symbol,
+          int? color,
+          num? startingValue,
+          bool? active,
+          bool? mainAccount,
+          DateTime? createdAt,
+          DateTime? updatedAt}) =>
+      BankAccountRM(
+          id: id ?? this.id,
+          name: name ?? this.name,
+          symbol: symbol ?? this.symbol,
+          color: color ?? this.color,
+          startingValue: startingValue ?? this.startingValue,
+          active: active ?? this.active,
+          mainAccount: mainAccount ?? this.mainAccount,
+          createdAt: createdAt ?? this.createdAt,
+          updatedAt: updatedAt ?? this.updatedAt);
 
-  @override
-  String toString() {
-    return 'FinancialAccount{account_icon: $accountIcon, account_name: $accountName, account_beggening: $accountBeginning, main_account: $mainAccount, color: $color}';
-  }
+  static BankAccountRM fromJson(Map<String, Object?> json) => BankAccountRM(
+      id: json[BaseEntityFields.id] as int,
+      name: json[BankAccountFieldsRM.name] as String,
+      symbol: json[BankAccountFieldsRM.symbol] as String,
+      color: json[BankAccountFieldsRM.color] as int,
+      startingValue: json[BankAccountFieldsRM.startingValue] as num,
+      active: json[BankAccountFieldsRM.active] == 1 ? true : false,
+      mainAccount: json[BankAccountFieldsRM.mainAccount] == 1 ? true : false,
+      total: json[BankAccountFieldsRM.total] as num?,
+      createdAt: DateTime.parse(json[BaseEntityFields.createdAt] as String),
+      updatedAt: DateTime.parse(json[BaseEntityFields.updatedAt] as String));
+
+  Map<String, Object?> toJson({bool update = false}) => {
+        BankAccountFieldsRM.id: id,
+        BankAccountFieldsRM.name: name,
+        BankAccountFieldsRM.symbol: symbol,
+        BankAccountFieldsRM.color: color,
+        BankAccountFieldsRM.startingValue: startingValue,
+        BankAccountFieldsRM.active: active ? 1 : 0,
+        BankAccountFieldsRM.mainAccount: mainAccount ? 1 : 0,
+        BaseEntityFields.createdAt: update
+            ? createdAt?.toIso8601String()
+            : DateTime.now().toIso8601String(),
+        BaseEntityFields.updatedAt: DateTime.now().toIso8601String(),
+      };
 }

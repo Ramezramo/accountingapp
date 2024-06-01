@@ -4,6 +4,7 @@ import 'package:accounting_app_last/newdfiles/dboperations/transaction_object.da
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 
+import '../../model/ol_fls/bank_account.dart';
 import '../../model/ol_fls/transaction.dart';
 
 class SqlDb {
@@ -116,6 +117,82 @@ class SqlDb {
 """);
   }
 
+  Future<List<TransactionRM>> fetchTransactions() async {
+    // Fetch the data from the 'transactions' table using readTableData
+    List<Map> maps = await readTableData(transactionTableRM);
+
+    // Convert the List<Map> to List<TransactionRM>
+    return maps.map((transaction) {
+      return TransactionRM.fromJson(transaction.cast<String, Object?>());
+    }).toList();
+  }
+
+  Future<BankAccountRM> insertBankAccount(
+      BankAccountRM item, bool printTableData) async {
+    final db = await database;
+
+    // await changeMainAccount(db, item);
+
+    final id = await db!.insert(bankAccountTableRM, item.toJson());
+    if (printTableData) {
+      print(await readTableData(bankAccountTableRM));
+    }
+
+    return item.copy(id: id);
+  }
+
+  Future<List<BankAccountRM>?> selectAllAccounts() async {
+    final db = await database;
+
+    final orderByASC = '${BankAccountFieldsRM.createdAt} ASC';
+    final where =
+        '${BankAccountFieldsRM.active} = 1 AND (${TransactionFieldsRM.recurring} = 0 OR ${TransactionFieldsRM.recurring} is NULL)';
+
+    final result = await db?.rawQuery('''
+      SELECT b.*, (b.${BankAccountFieldsRM.startingValue} +
+      SUM(CASE WHEN t.${TransactionFieldsRM.type} = 'IN' OR t.${TransactionFieldsRM.type} = 'TRSF' AND t.${TransactionFieldsRM.idBankAccountTransfer} = b.${TransactionFieldsRM.id} THEN t.${TransactionFieldsRM.amount}
+               ELSE 0 END) -
+      SUM(CASE WHEN t.${TransactionFieldsRM.type} = 'OUT' OR t.${TransactionFieldsRM.type} = 'TRSF' AND t.${TransactionFieldsRM.idBankAccount} = b.${TransactionFieldsRM.id} THEN t.${TransactionFieldsRM.amount}
+               ELSE 0 END)
+    ) as ${BankAccountFieldsRM.total}
+      FROM $bankAccountTableRM as b
+      LEFT JOIN "$transactionTableRM" as t ON t.${TransactionFieldsRM.idBankAccount} = b.${BankAccountFieldsRM.id} OR t.${TransactionFieldsRM.idBankAccountTransfer} = b.${BankAccountFieldsRM.id}
+      WHERE $where
+      GROUP BY b.${BankAccountFieldsRM.id}
+      ORDER BY $orderByASC
+    ''');
+
+    List<BankAccountRM> resultQuery =
+        result!.map((json) => BankAccountRM.fromJson(json)).toList();
+    print(resultQuery);
+    return resultQuery;
+  }
+
+  Future<List<CategoryTransactionRM>> selectAllCategories() async {
+    final db = await database;
+
+    final orderByASC = '${CategoryTransactionFieldsRM.createdAt} ASC';
+
+    final result =
+        await db?.query(categoryTransactionTableRM, orderBy: orderByASC);
+    var listedResult =
+        result!.map((json) => CategoryTransactionRM.fromJson(json)).toList();
+    print(listedResult);
+
+    return listedResult;
+  }
+
+  Future<CategoryTransactionRM> insertCategoryDB(
+      CategoryTransactionRM item, bool printTableData) async {
+    final db = await database;
+    final id = await db?.insert(categoryTransactionTableRM, item.toJson());
+    // stoped in here this prints the objects
+    if (printTableData) {
+      print(await readTableData(transactionTableRM));
+    }
+    return item.copy(id: id);
+  }
+
   Future<TransactionRM> insertTransactionRM(TransactionRM item) async {
     final db = await database;
     final id = await db?.insert(transactionTableRM, item.toJson());
@@ -183,7 +260,7 @@ class SqlDb {
     // await SqlDb.instance.updateTotals();
     Database? mydb = _database;
     List<Map> response = await mydb!.rawQuery("SELECT * FROM '$tableNameb'");
-    print(response);
+
     return response;
   }
 

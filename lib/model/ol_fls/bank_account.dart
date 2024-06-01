@@ -2,6 +2,7 @@ import 'package:accounting_app_last/database/ol_fls/appname_database.dart';
 import 'package:sqflite/sqflite.dart';
 
 // import '../database/ol_fls/appname_database.dart';
+import '../../newdfiles/dboperations/financialaccount.dart';
 import 'base_entity.dart';
 import 'transaction.dart';
 import 'category_transaction.dart';
@@ -33,77 +34,77 @@ class BankAccountFields extends BaseEntityFields {
   ];
 }
 
-class BankAccount extends BaseEntity {
-  final String name;
-  final String symbol;
-  final int color;
-  final num startingValue;
-  final bool active;
-  final bool mainAccount;
-  final num? total;
+// class BankAccountRM extends BaseEntity {
+//   final String name;
+//   final String symbol;
+//   final int color;
+//   final num startingValue;
+//   final bool active;
+//   final bool mainAccount;
+//   final num? total;
 
-  const BankAccount(
-      {super.id,
-      required this.name,
-      required this.symbol,
-      required this.color,
-      required this.startingValue,
-      required this.active,
-      required this.mainAccount,
-      this.total,
-      super.createdAt,
-      super.updatedAt});
+//   const BankAccountRM(
+//       {super.id,
+//       required this.name,
+//       required this.symbol,
+//       required this.color,
+//       required this.startingValue,
+//       required this.active,
+//       required this.mainAccount,
+//       this.total,
+//       super.createdAt,
+//       super.updatedAt});
 
-  BankAccount copy(
-          {int? id,
-          String? name,
-          String? symbol,
-          int? color,
-          num? startingValue,
-          bool? active,
-          bool? mainAccount,
-          DateTime? createdAt,
-          DateTime? updatedAt}) =>
-      BankAccount(
-          id: id ?? this.id,
-          name: name ?? this.name,
-          symbol: symbol ?? this.symbol,
-          color: color ?? this.color,
-          startingValue: startingValue ?? this.startingValue,
-          active: active ?? this.active,
-          mainAccount: mainAccount ?? this.mainAccount,
-          createdAt: createdAt ?? this.createdAt,
-          updatedAt: updatedAt ?? this.updatedAt);
+//   BankAccountRM copy(
+//           {int? id,
+//           String? name,
+//           String? symbol,
+//           int? color,
+//           num? startingValue,
+//           bool? active,
+//           bool? mainAccount,
+//           DateTime? createdAt,
+//           DateTime? updatedAt}) =>
+//       BankAccountRM(
+//           id: id ?? this.id,
+//           name: name ?? this.name,
+//           symbol: symbol ?? this.symbol,
+//           color: color ?? this.color,
+//           startingValue: startingValue ?? this.startingValue,
+//           active: active ?? this.active,
+//           mainAccount: mainAccount ?? this.mainAccount,
+//           createdAt: createdAt ?? this.createdAt,
+//           updatedAt: updatedAt ?? this.updatedAt);
 
-  static BankAccount fromJson(Map<String, Object?> json) => BankAccount(
-      id: json[BaseEntityFields.id] as int,
-      name: json[BankAccountFields.name] as String,
-      symbol: json[BankAccountFields.symbol] as String,
-      color: json[BankAccountFields.color] as int,
-      startingValue: json[BankAccountFields.startingValue] as num,
-      active: json[BankAccountFields.active] == 1 ? true : false,
-      mainAccount: json[BankAccountFields.mainAccount] == 1 ? true : false,
-      total: json[BankAccountFields.total] as num?,
-      createdAt: DateTime.parse(json[BaseEntityFields.createdAt] as String),
-      updatedAt: DateTime.parse(json[BaseEntityFields.updatedAt] as String));
+//   static BankAccountRM fromJson(Map<String, Object?> json) => BankAccountRM(
+//       id: json[BaseEntityFields.id] as int,
+//       name: json[BankAccountFields.name] as String,
+//       symbol: json[BankAccountFields.symbol] as String,
+//       color: json[BankAccountFields.color] as int,
+//       startingValue: json[BankAccountFields.startingValue] as num,
+//       active: json[BankAccountFields.active] == 1 ? true : false,
+//       mainAccount: json[BankAccountFields.mainAccount] == 1 ? true : false,
+//       total: json[BankAccountFields.total] as num?,
+//       createdAt: DateTime.parse(json[BaseEntityFields.createdAt] as String),
+//       updatedAt: DateTime.parse(json[BaseEntityFields.updatedAt] as String));
 
-  Map<String, Object?> toJson({bool update = false}) => {
-        BaseEntityFields.id: id,
-        BankAccountFields.name: name,
-        BankAccountFields.symbol: symbol,
-        BankAccountFields.color: color,
-        BankAccountFields.startingValue: startingValue,
-        BankAccountFields.active: active ? 1 : 0,
-        BankAccountFields.mainAccount: mainAccount ? 1 : 0,
-        BaseEntityFields.createdAt: update
-            ? createdAt?.toIso8601String()
-            : DateTime.now().toIso8601String(),
-        BaseEntityFields.updatedAt: DateTime.now().toIso8601String(),
-      };
-}
+//   Map<String, Object?> toJson({bool update = false}) => {
+//         BaseEntityFields.id: id,
+//         BankAccountFields.name: name,
+//         BankAccountFields.symbol: symbol,
+//         BankAccountFields.color: color,
+//         BankAccountFields.startingValue: startingValue,
+//         BankAccountFields.active: active ? 1 : 0,
+//         BankAccountFields.mainAccount: mainAccount ? 1 : 0,
+//         BaseEntityFields.createdAt: update
+//             ? createdAt?.toIso8601String()
+//             : DateTime.now().toIso8601String(),
+//         BaseEntityFields.updatedAt: DateTime.now().toIso8601String(),
+//       };
+// }
 
 class BankAccountMethods extends accounting_app_lastDatabase {
-  Future<BankAccount> insert(BankAccount item) async {
+  Future<BankAccountRM> insert(BankAccountRM item) async {
     final db = await database;
 
     await changeMainAccount(db, item);
@@ -112,7 +113,7 @@ class BankAccountMethods extends accounting_app_lastDatabase {
     return item.copy(id: id);
   }
 
-  Future<BankAccount> selectById(int id) async {
+  Future<BankAccountRM> selectById(int id) async {
     final db = await database;
 
     final maps = await db.query(
@@ -123,13 +124,13 @@ class BankAccountMethods extends accounting_app_lastDatabase {
     );
 
     if (maps.isNotEmpty) {
-      return BankAccount.fromJson(maps.first);
+      return BankAccountRM.fromJson(maps.first);
     } else {
       throw Exception('ID $id not found');
     }
   }
 
-  Future<BankAccount?> selectMain() async {
+  Future<BankAccountRM?> selectMain() async {
     final db = await database;
 
     final maps = await db.query(
@@ -140,13 +141,13 @@ class BankAccountMethods extends accounting_app_lastDatabase {
     );
 
     if (maps.isNotEmpty) {
-      return BankAccount.fromJson(maps.first);
+      return BankAccountRM.fromJson(maps.first);
     } else {
       throw Exception('Main Account not found');
     }
   }
 
-  Future<List<BankAccount>> selectAll() async {
+  Future<List<BankAccountRM>> selectAll() async {
     final db = await database;
 
     final orderByASC = '${BankAccountFields.createdAt} ASC';
@@ -167,10 +168,10 @@ class BankAccountMethods extends accounting_app_lastDatabase {
       ORDER BY $orderByASC
     ''');
 
-    return result.map((json) => BankAccount.fromJson(json)).toList();
+    return result.map((json) => BankAccountRM.fromJson(json)).toList();
   }
 
-  Future<int> updateItem(BankAccount item) async {
+  Future<int> updateItem(BankAccountRM item) async {
     final db = await database;
 
     await changeMainAccount(db, item);
@@ -185,9 +186,9 @@ class BankAccountMethods extends accounting_app_lastDatabase {
   }
 
   // Check if the new item has mainAccount true, than find the previous main account and set it to false
-  changeMainAccount(Database db, BankAccount item) async {
+  changeMainAccount(Database db, BankAccountRM item) async {
     if (item.mainAccount) {
-      BankAccount? mainAccount = await selectMain();
+      BankAccountRM? mainAccount = await selectMain();
       if (mainAccount != null && mainAccount.id != item.id) {
         mainAccount = mainAccount.copy(mainAccount: false);
         await db.update(

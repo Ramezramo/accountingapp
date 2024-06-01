@@ -9,17 +9,17 @@ import '../../dboperations/transaction_object.dart';
 part 'dboperationsbloc_state.dart';
 
 class DboperationsblocCubit extends Cubit<DboperationsblocState> {
-  DboperationsblocCubit() : super(DboperationsblocLoading()) {
+  DboperationsblocCubit() : super(AddingTransactionblocLoading()) {
     readExpensesAndIncome();
   }
 
   void readExpensesAndIncome() async {
     try {
-      emit(DboperationsblocLoading());
+      emit(AddingTransactionblocLoading());
       final result = await _readExpensesAndIncome();
-      emit(DboperationsblocSuccess(result[0]));
+      emit(AddingTransactionblocSuccess(result[0]));
     } catch (error) {
-      emit(DboperationsblocFailure(error.toString()));
+      emit(AddingTransactionblocFailure(error.toString()));
     }
   }
 
@@ -27,21 +27,42 @@ class DboperationsblocCubit extends Cubit<DboperationsblocState> {
     List<Map> readTableRes = await SqlDb.instance.readTableData("totals");
     return readTableRes;
   }
+ 
 
-  // void insertTransaction(date, amount, type, note) async {
-  //   emit(DboperationsblocLoading());
-  //   try {
-  //     await _insertTransaction(date, amount, type, note);
-  //     final result = await _readExpensesAndIncome();
-  //     print(DboperationsblocSuccess(result[0]));
-  //     emit(DboperationsblocSuccess());
-  //   } catch (error) {
-  //     emit(DboperationsblocFailure(error.toString()));
-  //   }
-  // }
+  Future<void> readAllTransactions()async {
+    
+  }
+  Future<void> insertCategory(CategoryTransactionRM item) async {
+    emit(AddingCategoryblocLoading());
+    try {
+      print(item.toJson());
+      final result = await SqlDb.instance.insertCategoryDB(item,true);
+      print(result);
+      final readDbData = await _readExpensesAndIncome();
+      print(readDbData[0]);
+      emit(AddingCategoryblocSuccess(readDbData[0]));
+    } catch (error) {
+      print(error);
+      emit(AddingCategoryBlocFailure(error.toString()));
+    }
+  }
+  Future<void> insertBankAccount(BankAccountRM item) async {
+    emit(AddingBankAccountblocLoading());
+    try {
+      print(item.toJson());
+      final result = await SqlDb.instance.insertBankAccount(item,true);
+      print(result);
+      final readDbData = await _readExpensesAndIncome();
+      print(readDbData[0]);
+      emit(AddingBankAccountblocSuccess(readDbData[0]));
+    } catch (error) {
+      print(error);
+      emit(AddingBankAccountlocFailure(error.toString()));
+    }
+  }
 
   Future<void> insertTransaction(TransactionRM item) async {
-    emit(DboperationsblocLoading());
+    emit(AddingTransactionblocLoading());
     try {
       print("code dfsfsdf");
       print(item.toJson());
@@ -49,10 +70,10 @@ class DboperationsblocCubit extends Cubit<DboperationsblocState> {
       print(result);
       final readDbData = await _readExpensesAndIncome();
       print(readDbData[0]);
-      emit(DboperationsblocSuccess(readDbData[0]));
+      emit(AddingTransactionblocSuccess(readDbData[0]));
     } catch (error) {
       print(error);
-      emit(DboperationsblocFailure(error.toString()));
+      emit(AddingTransactionblocFailure(error.toString()));
     }
   }
 
@@ -129,19 +150,20 @@ class DboperationsblocCubit extends Cubit<DboperationsblocState> {
 //   }
 
   void insertData() async {
-    emit(DboperationsblocLoading());
+    emit(AddingTransactionblocLoading());
     try {
       await _insertIntoDatabase();
       final result = await _readExpensesAndIncome();
-      print(DboperationsblocSuccess(result[0]));
-      emit(DboperationsblocSuccess(result[0]));
+      print(AddingTransactionblocSuccess(result[0]));
+      emit(AddingTransactionblocSuccess(result[0]));
     } catch (error) {
-      emit(DboperationsblocFailure(error.toString()));
+      emit(AddingTransactionblocFailure(error.toString()));
     }
   }
 
   Future<void> _insertIntoDatabase() async {
-    String insertCategory = """
+    String insertCategory =
+        """
     INSERT INTO $categoryTransactionTableRM (
           ${CategoryTransactionFieldsRM.name},
           ${CategoryTransactionFieldsRM.symbol},
@@ -156,7 +178,8 @@ class DboperationsblocCubit extends Cubit<DboperationsblocState> {
     );
   """;
 
-    String insertQueryFinancialAccount = """INSERT INTO $bankAccountTableRM (
+    String insertQueryFinancialAccount =
+        """INSERT INTO $bankAccountTableRM (
           ${BankAccountFieldsRM.name},
           ${BankAccountFieldsRM.symbol},
           ${BankAccountFieldsRM.color},
@@ -170,7 +193,8 @@ class DboperationsblocCubit extends Cubit<DboperationsblocState> {
     );
   """;
 
-    String insertUsAccTransactionQuery = """
+    String insertUsAccTransactionQuery =
+        """
     INSERT INTO $transactionTableRM (
           ${TransactionFieldsRM.date},
           ${TransactionFieldsRM.amount},

@@ -8,11 +8,12 @@ import '../constants/constants.dart';
 import '../constants/functions.dart';
 import '../constants/style.dart';
 import '../../../providers/accounts_provider.dart';
+import '../newdfiles/dboperations/financialaccount.dart';
 import '../providers/currency_provider.dart';
 
 /// This class shows account summaries in the dashboard
 class AccountsSum extends ConsumerWidget with Functions {
-  final BankAccount account;
+  final BankAccountRM account;
 
   const AccountsSum({
     super.key,

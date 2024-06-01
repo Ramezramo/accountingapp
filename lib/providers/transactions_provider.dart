@@ -11,6 +11,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../model/ol_fls/bank_account.dart';
 import '../model/ol_fls/category_transaction.dart';
 import '../model/ol_fls/transaction.dart';
+import '../newdfiles/dboperations/categoryobject.dart';
+import '../newdfiles/dboperations/financialaccount.dart';
 import 'accounts_provider.dart';
 import 'dashboard_provider.dart';
 import 'statistics_provider.dart';
@@ -28,12 +30,13 @@ final transactionTypeList = Provider<List<TransactionType>>((ref) => [
 
 final transactionTypeProvider =
     StateProvider<TransactionType>((ref) => TransactionType.expense);
-final bankAccountTransferProvider = StateProvider<BankAccount?>((ref) => null);
+final bankAccountTransferProvider =
+    StateProvider<BankAccountRM?>((ref) => null);
 // Used as from account in transfer transactions
 final bankAccountProvider =
-    StateProvider<BankAccount?>((ref) => ref.read(mainAccountProvider));
+    StateProvider<BankAccountRM?>((ref) => ref.read(mainAccountProvider));
 final dateProvider = StateProvider<DateTime>((ref) => DateTime.now());
-final categoryProvider = StateProvider<CategoryTransaction?>((ref) => null);
+final categoryProvider = StateProvider<CategoryTransactionRM?>((ref) => null);
 
 // Recurring Payment
 final selectedRecurringPayProvider = StateProvider<bool>((ref) => false);
@@ -134,33 +137,45 @@ class AsyncTransactionsNotifier
     });
   }
 
-  Future<void> addTransaction(
-      BuildContext context, num amount, String label,String transactionType) async {
-    // Set the state to loading if needed
-    // state = const AsyncValue.loading();
+  Future<void> addTransaction(BuildContext context, num amount, String label,
+      String transactionType) async {
+    // unlock this in the formal running
+    // final date = ref.read(dateProvider);
+    // final bankAccount = ref.read(bankAccountProvider)!;
+    // final bankAccountTransfer = ref.read(bankAccountTransferProvider);
+    // final category = ref.read(categoryProvider);
+    // final recurring = ref.read(selectedRecurringPayProvider);
+    // print("adding");
 
+    // TransactionRM transaction = TransactionRM(
+    //   date: date,
+    //   amount: amount,
+    //   type: transactionType,
+    //   note: label,
+    //   idBankAccount: bankAccount.id!,
+    //   idBankAccountTransfer: bankAccountTransfer?.id,
+    //   idCategory: category?.id,
+    //   recurring: recurring,
+    // );
+
+    // this for testing
     final date = ref.read(dateProvider);
-    final bankAccount = ref.read(bankAccountProvider)!;
-    final bankAccountTransfer = ref.read(bankAccountTransferProvider);
-    final category = ref.read(categoryProvider);
-    final recurring = ref.read(selectedRecurringPayProvider);
+    // final bankAccount = ref.read(bankAccountProvider)!;
+    // final bankAccountTransfer = ref.read(bankAccountTransferProvider);
+    // final category = ref.read(categoryProvider);
+    // final recurring = ref.read(selectedRecurringPayProvider);
     print("adding");
 
-    // Call the Cubit method to insert the transaction
-    // context.read<DboperationsblocCubit>().insertTransaction(date, amount,TransactionFieldsRM.typeExpenses, label);
-
-    // Handle other logic or state updates if necessary
     TransactionRM transaction = TransactionRM(
       date: date,
       amount: amount,
       type: transactionType,
       note: label,
-      idBankAccount: bankAccount.id!,
-      idBankAccountTransfer: bankAccountTransfer?.id,
-      idCategory: category?.id,
-      recurring: recurring,
+      idBankAccount: 1,
+      idBankAccountTransfer: 1,
+      idCategory: 1,
+      recurring: true,
     );
-
     context.read<DboperationsblocCubit>().insertTransaction(transaction);
 
     // state = await AsyncValue.guard(() async {

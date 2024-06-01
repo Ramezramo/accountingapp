@@ -6,6 +6,7 @@ import '../../constants/style.dart';
 // import '../../model/category_transaction.dart';
 import '../../model/ol_fls/budget.dart';
 import '../../model/ol_fls/category_transaction.dart';
+import '../../newdfiles/dboperations/categoryobject.dart';
 import 'widget/budget_category_selector.dart';
 import '../../../providers/categories_provider.dart';
 import '../../../providers/budgets_provider.dart';
@@ -19,7 +20,7 @@ class ManageBudgetPage extends ConsumerStatefulWidget {
 }
 
 class _ManageBudgetPageState extends ConsumerState<ManageBudgetPage> {
-  List<CategoryTransaction> categories = [];
+  List<CategoryTransactionRM> categories = [];
   List<Budget> budgets = [];
   List<Budget> deletedBudgets = [];
 
