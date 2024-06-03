@@ -6,7 +6,7 @@ import '../constants/style.dart';
 // import '../model/transaction.dart';
 import '../pages/transactions_page/widgets/accounts_tab.dart';
 import '../pages/transactions_page/widgets/categories_tab.dart';
-
+ 
 final selectedTransactionTypeProvider =
     StateProvider.autoDispose<TransactionType>((ref) => TransactionType.income);
 

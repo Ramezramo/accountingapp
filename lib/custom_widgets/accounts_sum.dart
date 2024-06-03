@@ -30,7 +30,7 @@ class AccountsSum extends ConsumerWidget with Functions {
         color: white,
         borderRadius: BorderRadius.circular(8),
         boxShadow: [defaultShadow],
-      ),
+      ), 
       child: Container(
         decoration: BoxDecoration(
           color: accountColorListTheme[account.color].withOpacity(0.2),

@@ -4,7 +4,7 @@ import '../utils/app_theme.dart';
 ///
 /// Builder class to create a customized dialog with some options
 /// To simply show a dialog with text, you may also use [showInfoDialog], [showWarningDialog] or [showErrorDialog]
-///
+/// 
 class AlertDialogBuilder {
   AlertDialogBuilder(
       {required this.text,

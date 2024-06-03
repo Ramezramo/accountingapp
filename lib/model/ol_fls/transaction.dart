@@ -267,7 +267,7 @@ class TransactionMethods extends accounting_app_lastDatabase {
       where =
           "${where != null ? '$where and ' : ''}t.type IN (${transactionTypeList.join(',')}) ";
     }
-
+ 
     if (bankAccounts != null &&
         !bankAccounts.entries.every((element) => element.value == false)) {
       final bankAccountIds = bankAccounts.entries

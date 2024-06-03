@@ -7,7 +7,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../constants/functions.dart';
 import '../providers/currency_provider.dart';
 import 'line_chart.dart';
-
+ 
 class AccountDialog extends ConsumerWidget with Functions {
   final String accountName;
   final num amount;

@@ -6,7 +6,7 @@ import '../../newdfiles/dboperations/financialaccount.dart';
 import 'base_entity.dart';
 import 'transaction.dart';
 import 'category_transaction.dart';
-
+ 
 const String bankAccountTable = 'bankAccount';
 
 class BankAccountFields extends BaseEntityFields {

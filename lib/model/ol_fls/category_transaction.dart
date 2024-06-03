@@ -15,7 +15,7 @@ class CategoryTransactionFields extends BaseEntityFields {
   static String parent = 'parent';
   static String createdAt = BaseEntityFields.getCreatedAt;
   static String updatedAt = BaseEntityFields.getUpdatedAt;
-
+ 
   static final List<String> allFields = [
     BaseEntityFields.id,
     name,

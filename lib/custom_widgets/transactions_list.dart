@@ -23,7 +23,7 @@ class TransactionsList extends StatefulWidget {
 
   @override
   State<TransactionsList> createState() => _TransactionsListState();
-}
+} 
 
 class _TransactionsListState extends State<TransactionsList> with Functions {
   Map<String, double> totals = {};

@@ -178,7 +178,7 @@ class BudgetMethods extends accounting_app_lastDatabase {
         'SELECT bt.*, ct.name FROM $budgetTable as bt LEFT JOIN $categoryTransactionTable as ct ON bt.${BudgetFields.idCategory} = ct.${CategoryTransactionFields.id} WHERE bt.active = 1 ORDER BY $orderByASC');
     return result.map((json) => Budget.fromJson(json)).toList();
   }
-
+ 
   Future<List<BudgetStats>> selectMonthlyBudgetsStats() async {
     final db = await database;
     var query = "SELECT bt.*, SUM(t.amount) as spent FROM $budgetTable as bt " +

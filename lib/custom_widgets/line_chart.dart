@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 enum Period { month, year }
-
+ 
 //This class can be used when we need to draw a line chart with one or two lines
 class LineChartWidget extends StatefulWidget {
   final List<FlSpot> lineData; //this should be a list of Flspot(x,y)

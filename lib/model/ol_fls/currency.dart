@@ -11,7 +11,7 @@ class CurrencyFields extends BaseEntityFields {
   static String code = 'code';
   static String name = 'name';
   static String mainCurrency = 'mainCurrency';
-
+ 
   static final List<String> allFields = [
     BaseEntityFields.id,
     symbol,

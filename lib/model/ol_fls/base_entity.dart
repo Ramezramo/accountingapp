@@ -6,7 +6,7 @@ abstract class BaseEntityFields {
   static String get getId {
     return id;
   }
-
+ 
   static String get getCreatedAt {
     return createdAt;
   }

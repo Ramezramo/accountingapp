@@ -7,7 +7,7 @@ class DefaultCard extends StatefulWidget {
 
   final Widget child;
   final GestureTapCallback? onTap;
-
+ 
   @override
   State<DefaultCard> createState() => _DefaultCardState();
 }
