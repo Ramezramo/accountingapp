@@ -8,7 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:path/path.dart';
-import '../newdfiles/bloc/cubit/dboperationsbloc_cubit.dart';
+// import '../newdfiles/bloc/cubit/dboperationsbloc_cubit.dart';
 import '../newdfiles/dboperations/categoryobject.dart';
 import '../newdfiles/pages/testCubitPage/cubitpagetest.dart';
 import '../providers/categories_provider.dart';
@@ -139,8 +139,8 @@ class _StructureState extends ConsumerState<Structure> {
           child: ElevatedButton(
             // onPressed: () => Navigator.of(context).pushNamed('/search'),
             onPressed: () async {
-              final categories = await SqlDb.instance.selectAllCategories();
-              print(categories[1].id);
+              final categories = SqlDb.instance.fetchTransactions();
+              print(categories);
 
               //           context.read<DboperationsblocCubit>().insertTransaction(
               // date, 50, TransactionFieldsRM.typeExpenses, "note");

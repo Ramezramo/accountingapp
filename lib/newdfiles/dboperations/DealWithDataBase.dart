@@ -1,3 +1,4 @@
+import 'package:accounting_app_last/model/ol_fls/category_transaction.dart';
 import 'package:accounting_app_last/newdfiles/dboperations/categoryobject.dart';
 import 'package:accounting_app_last/newdfiles/dboperations/financialaccount.dart';
 import 'package:accounting_app_last/newdfiles/dboperations/transaction_object.dart';
@@ -117,14 +118,108 @@ class SqlDb {
 """);
   }
 
+  Future<List<CategoryTransaction>> selectAll() async {
+    final db = await database;
+
+    final orderByASC = '${CategoryTransactionFields.createdAt} ASC';
+
+    final result =
+        await db!.query(categoryTransactionTable, orderBy: orderByASC);
+    var listedResult =
+        result.map((json) => CategoryTransaction.fromJson(json)).toList();
+    
+
+    return listedResult;
+  }
+
+  Future<CategoryTransactionRM> selectById(int id) async {
+    final db = await database;
+
+    final maps = await db!.query(
+      categoryTransactionTableRM,
+      columns: CategoryTransactionFieldsRM.allFields,
+      where: '${CategoryTransactionFieldsRM.id} = ?',
+      whereArgs: [id],
+    );
+
+    if (maps.isNotEmpty) {
+      return CategoryTransactionRM.fromJson(maps.first);
+    } else {
+      throw Exception('ID $id not found');
+    }
+  }
   Future<List<TransactionRM>> fetchTransactions() async {
     // Fetch the data from the 'transactions' table using readTableData
     List<Map> maps = await readTableData(transactionTableRM);
 
     // Convert the List<Map> to List<TransactionRM>
-    return maps.map((transaction) {
+    print(maps);
+    var resultIs = maps.map((transaction) {
       return TransactionRM.fromJson(transaction.cast<String, Object?>());
     }).toList();
+    print(resultIs);
+    return resultIs;
+  }
+  Future<int> updateItem(TransactionRM item) async {
+    final db = await database;
+
+    // You can use `rawUpdate` to write the query in SQL
+    return db!.update(
+      transactionTable,
+      item.toJson(update: true),
+      where: '${TransactionFields.id} = ?',
+      whereArgs: [item.id],
+    );
+  }
+  Future<List<Map<String, Object?>>?> accountDailyBalance(
+    int accountId, {
+    DateTime? dateRangeStart,
+    DateTime? dateRangeEnd,
+  }) async {
+    final db = await database;
+
+    final accountFilter =
+        "(${TransactionFieldsRM.idBankAccount} = $accountId OR ${TransactionFieldsRM.idBankAccountTransfer} = $accountId)";
+    final recurrentFilter = "(${TransactionFields.recurring} = 0)";
+    final periodFilterEnd = dateRangeEnd != null
+        ? "strftime('%Y-%m-%d', ${TransactionFieldsRM.date}) < '${dateRangeEnd.toString().substring(0, 10)}'"
+        : "";
+    final filters = [periodFilterEnd, accountFilter, recurrentFilter];
+    final sqlFilters = filters.where((filter) => filter != "").join(" AND ");
+
+    final resultQuery = await db?.rawQuery('''
+      SELECT
+        strftime('%Y-%m-%d', ${TransactionFieldsRM.date}) as day,
+        SUM(CASE WHEN (${TransactionFieldsRM.type} = 'IN' OR (${TransactionFieldsRM.type} = 'TRSF' AND ${TransactionFieldsRM.idBankAccountTransfer} = $accountId)) THEN ${TransactionFieldsRM.amount} ELSE 0 END) as income,
+        SUM(CASE WHEN ${TransactionFieldsRM.type} = 'OUT' OR (${TransactionFieldsRM.type} = 'TRSF' AND ${TransactionFieldsRM.idBankAccount} = $accountId) THEN ${TransactionFieldsRM.amount} ELSE 0 END) as expense
+      FROM "$transactionTableRM"
+      WHERE $sqlFilters
+      GROUP BY day
+    ''');
+
+    final statritngValue = await db?.rawQuery('''
+      SELECT ${BankAccountFieldsRM.startingValue} as Value
+      FROM $bankAccountTableRM
+      WHERE ${BankAccountFieldsRM.id} = $accountId
+    ''');
+
+    double runningTotal = statritngValue![0]['Value'] as double;
+
+    var result = resultQuery?.map((e) {
+      runningTotal += double.parse(e['income'].toString()) -
+          double.parse(e['expense'].toString());
+      return {"day": e["day"], "balance": runningTotal};
+    }).toList();
+
+    if (dateRangeStart != null) {
+      return result
+          ?.where((element) => dateRangeStart.isBefore(
+              DateTime.parse(element["day"].toString())
+                  .add(const Duration(days: 1))))
+          .toList();
+    }
+
+    return result;
   }
 
   Future<BankAccountRM> insertBankAccount(
@@ -259,7 +354,9 @@ class SqlDb {
   Future<List<Map>> readTableData(String tableNameb) async {
     // await SqlDb.instance.updateTotals();
     Database? mydb = _database;
+    print(tableNameb);
     List<Map> response = await mydb!.rawQuery("SELECT * FROM '$tableNameb'");
+    print(response);
 
     return response;
   }

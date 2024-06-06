@@ -98,36 +98,9 @@ class CategoryTransactionMethods extends accounting_app_lastDatabase {
     return item.copy(id: id);
   }
 
-  Future<CategoryTransactionRM> selectById(int id) async {
-    final db = await database;
 
-    final maps = await db.query(
-      categoryTransactionTable,
-      columns: CategoryTransactionFields.allFields,
-      where: '${CategoryTransactionFields.id} = ?',
-      whereArgs: [id],
-    );
 
-    if (maps.isNotEmpty) {
-      return CategoryTransactionRM.fromJson(maps.first);
-    } else {
-      throw Exception('ID $id not found');
-    }
-  }
 
-  Future<List<CategoryTransaction>> selectAll() async {
-    final db = await database;
-
-    final orderByASC = '${CategoryTransactionFields.createdAt} ASC';
-
-    final result =
-        await db.query(categoryTransactionTable, orderBy: orderByASC);
-    var listedResult =
-        result.map((json) => CategoryTransaction.fromJson(json)).toList();
-    
-
-    return listedResult;
-  }
 
   Future<int> updateItem(CategoryTransactionRM item) async {
     final db = await database;

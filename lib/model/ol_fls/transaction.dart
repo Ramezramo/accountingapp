@@ -1,5 +1,6 @@
 // import '../database/ol_fls/appname_database.dart';
 import 'package:accounting_app_last/database/ol_fls/appname_database.dart';
+import 'package:accounting_app_last/newdfiles/dboperations/transaction_object.dart';
 
 import 'bank_account.dart';
 import 'base_entity.dart';
@@ -267,7 +268,7 @@ class TransactionMethods extends accounting_app_lastDatabase {
       where =
           "${where != null ? '$where and ' : ''}t.type IN (${transactionTypeList.join(',')}) ";
     }
- 
+
     if (bankAccounts != null &&
         !bankAccounts.entries.every((element) => element.value == false)) {
       final bankAccountIds = bankAccounts.entries
@@ -397,17 +398,7 @@ class TransactionMethods extends accounting_app_lastDatabase {
     return result;
   }
 
-  Future<int> updateItem(Transaction item) async {
-    final db = await database;
 
-    // You can use `rawUpdate` to write the query in SQL
-    return db.update(
-      transactionTable,
-      item.toJson(update: true),
-      where: '${TransactionFields.id} = ?',
-      whereArgs: [item.id],
-    );
-  }
 
   Future<int> deleteById(int id) async {
     final db = await database;

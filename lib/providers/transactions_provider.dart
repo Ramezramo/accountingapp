@@ -1,4 +1,4 @@
-import 'package:accounting_app_last/newdfiles/bloc/cubit/dboperationsbloc_cubit.dart';
+// import 'package:accounting_app_last/newdfiles/bloc/cubit/dboperationsbloc_cubit.dart';
 import 'package:accounting_app_last/newdfiles/dboperations/DealWithDataBase.dart';
 import 'package:accounting_app_last/newdfiles/dboperations/transaction_object.dart';
 import 'package:flutter/material.dart';
@@ -11,6 +11,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../model/ol_fls/bank_account.dart';
 import '../model/ol_fls/category_transaction.dart';
 import '../model/ol_fls/transaction.dart';
+import '../newdfiles/bloc/cubit/cubit/general/dboperationsbloc_cubit.dart';
 import '../newdfiles/dboperations/categoryobject.dart';
 import '../newdfiles/dboperations/financialaccount.dart';
 import 'accounts_provider.dart';
@@ -45,7 +46,7 @@ final repetitionProvider = StateProvider<dynamic>((ref) => null);
 
 // Set when a transaction is selected for update
 final selectedTransactionUpdateProvider =
-    StateProvider<Transaction?>((ref) => null);
+    StateProvider<TransactionRM?>((ref) => null);
 
 // Amount total for the transactions filtered
 final totalAmountProvider = StateProvider<num>((ref) => 0);
@@ -184,7 +185,8 @@ class AsyncTransactionsNotifier
     // });
   }
 
-  Future<void> updateTransaction(num amount, String label) async {
+  Future<void> updateTransaction(
+      num amount, String label, String? typee) async {
     final type = ref.read(transactionTypeProvider);
     final date = ref.read(dateProvider);
     final bankAccount = ref.read(bankAccountProvider)!;
@@ -192,32 +194,33 @@ class AsyncTransactionsNotifier
     final category = ref.read(categoryProvider);
     final recurring = ref.read(selectedRecurringPayProvider);
 
-    Transaction transaction = ref.read(selectedTransactionUpdateProvider)!.copy(
-          date: date,
-          amount: amount,
-          type: type,
-          note: label,
-          idBankAccount: bankAccount.id!,
-          idBankAccountTransfer: bankAccountTransfer?.id,
-          idCategory: category?.id,
-          recurring: recurring,
-        );
+    TransactionRM transaction =
+        ref.read(selectedTransactionUpdateProvider)!.copy(
+              date: date,
+              amount: amount,
+              type: typee,
+              note: label,
+              idBankAccount: bankAccount.id!,
+              idBankAccountTransfer: bankAccountTransfer?.id,
+              idCategory: category?.id,
+              recurring: recurring,
+            );
+    await SqlDb.instance.updateItem(transaction);
 
-    state = const AsyncValue.loading();
-    state = await AsyncValue.guard(() async {
-      await TransactionMethods().updateItem(transaction);
-      return _getTransactions(update: true);
-    });
+    // state = const AsyncValue.loading();
+    // state = await AsyncValue.guard(() async {
+    //   await TransactionMethods().updateItem(transaction);
+    //   return _getTransactions(update: true);
+    // });
   }
 
-  Future<void> transactionUpdateState(Transaction transaction) async {
+  Future<void> transactionUpdateState(TransactionRM transaction) async {
     ref.read(selectedTransactionUpdateProvider.notifier).state = transaction;
     final accountList = ref.watch(accountsProvider);
     if (transaction.type != TransactionType.transfer) {
       if (transaction.idCategory != null) {
         ref.read(categoryProvider.notifier).state =
-            await CategoryTransactionMethods()
-                .selectById(transaction.idCategory!);
+            await SqlDb.instance.selectById(transaction.idCategory!);
       }
     }
     ref.read(bankAccountProvider.notifier).state = accountList.value!
@@ -227,7 +230,7 @@ class AsyncTransactionsNotifier
             ? accountList.value!.firstWhere(
                 (element) => element.id == transaction.idBankAccountTransfer)
             : null;
-    ref.read(transactionTypeProvider.notifier).state = transaction.type;
+    // ref.read(transactionTypeProvider.notifier).state = transaction.type;
     ref.read(dateProvider.notifier).state = transaction.date;
     ref.read(selectedRecurringPayProvider.notifier).state =
         transaction.recurring;

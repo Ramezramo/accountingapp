@@ -5,7 +5,10 @@ import 'package:fl_chart/fl_chart.dart';
 
 // import '../model/ol_fls/bank_account.dart';
 import '../model/ol_fls/bank_account.dart';
-import '../newdfiles/bloc/cubit/dboperationsbloc_cubit.dart';
+// import '../newdfiles/bloc/cubit/dboperationsbloc_cubit.dart';
+import '../newdfiles/bloc/cubit/cubit/bankAccount/cubit/bank_account_cubit.dart';
+import '../newdfiles/bloc/cubit/cubit/general/dboperationsbloc_cubit.dart';
+import '../newdfiles/dboperations/DealWithDataBase.dart';
 import '../newdfiles/dboperations/financialaccount.dart';
 
 final mainAccountProvider = StateProvider<BankAccountRM?>((ref) => null);
@@ -53,7 +56,7 @@ class AsyncAccountsNotifier extends AsyncNotifier<List<BankAccountRM>> {
       active: ref.read(countNetWorthSwitchProvider),
       mainAccount: ref.read(accountMainSwitchProvider),
     );
-    context.read<DboperationsblocCubit>().insertBankAccount(account);
+    context.read<BankAccountCubit>().insertBankAccount(account);
 
     // state = const AsyncValue.loading();
     // state = await AsyncValue.guard(() async {
@@ -80,30 +83,58 @@ class AsyncAccountsNotifier extends AsyncNotifier<List<BankAccountRM>> {
     //   return _getAccounts();
     // });
   }
+Future<void> selectedAccount(BankAccountRM account) async {
+  // Update various providers with account information
+  ref.read(selectedAccountProvider.notifier).state = account;
+  ref.read(accountIconProvider.notifier).state = account.symbol;
+  ref.read(accountColorProvider.notifier).state = account.color;
+  ref.read(accountMainSwitchProvider.notifier).state = account.mainAccount;
 
-  Future<void> selectedAccount(BankAccountRM account) async {
-    ref.read(selectedAccountProvider.notifier).state = account;
-    ref.read(accountIconProvider.notifier).state = account.symbol;
-    ref.read(accountColorProvider.notifier).state = account.color;
-    ref.read(accountMainSwitchProvider.notifier).state = account.mainAccount;
+  // Get the daily balance for the current month
+  final currentMonthDailyBalance = await SqlDb.instance.accountDailyBalance(
+    account.id!,
+    dateRangeStart: DateTime(DateTime.now().year, DateTime.now().month, 1), // Beginning of current month
+    dateRangeEnd: DateTime(DateTime.now().year, DateTime.now().month + 1, 1), // Beginning of next month
+  );
 
-    final currentMonthDailyBalance = await BankAccountMethods().accountDailyBalance(
-        account.id!,
-        dateRangeStart: DateTime(DateTime.now().year, DateTime.now().month,
-            1), // beginnig of current month
-        dateRangeEnd: DateTime(DateTime.now().year, DateTime.now().month + 1,
-            1) // beginnig of next month
-        );
-
-    ref.read(selectedAccountCurrentMonthDailyBalanceProvider.notifier).state =
-        currentMonthDailyBalance.map((e) {
-      return FlSpot(double.parse(e['day'].substring(8)) - 1,
-          double.parse(e['balance'].toStringAsFixed(2)));
+  // Convert the daily balance to FlSpot objects
+  ref.read(selectedAccountCurrentMonthDailyBalanceProvider.notifier).state =
+    currentMonthDailyBalance!.map((e) {
+      final day = e['day'] as String;
+      final balance = e['balance'] as num;
+      return FlSpot(
+        double.parse(day.substring(8)) - 1,
+        balance.toDouble(),
+      );
     }).toList();
 
-    ref.read(selectedAccountLastTransactions.notifier).state =
-        await BankAccountMethods().getTransactions(account.id!, 50);
-  }
+  // Get the last 50 transactions for the account
+  ref.read(selectedAccountLastTransactions.notifier).state =
+    await BankAccountMethods().getTransactions(account.id!, 50);
+}
+  // Future<void> selectedAccount(BankAccountRM account) async {
+  //   ref.read(selectedAccountProvider.notifier).state = account;
+  //   ref.read(accountIconProvider.notifier).state = account.symbol;
+  //   ref.read(accountColorProvider.notifier).state = account.color;
+  //   ref.read(accountMainSwitchProvider.notifier).state = account.mainAccount;
+
+  //   final currentMonthDailyBalance = await SqlDb.instance.accountDailyBalance(
+  //       account.id!,
+  //       dateRangeStart: DateTime(DateTime.now().year, DateTime.now().month,
+  //           1), // beginnig of current month
+  //       dateRangeEnd: DateTime(DateTime.now().year, DateTime.now().month + 1,
+  //           1) // beginnig of next month
+  //       );
+
+  //   ref.read(selectedAccountCurrentMonthDailyBalanceProvider.notifier).state =
+  //       currentMonthDailyBalance!.map((e) {
+  //     return FlSpot(double.parse(e['day'].substring(8)) - 1,
+  //         double.parse(e['balance'].toStringAsFixed(2)));
+  //   }).toList();
+
+  //   ref.read(selectedAccountLastTransactions.notifier).state =
+  //       await BankAccountMethods().getTransactions(account.id!, 50);
+  // }
 
   Future<void> removeAccount(int accountId) async {
     state = const AsyncValue.loading();

@@ -4,6 +4,7 @@ import '../../../providers/accounts_provider.dart';
 import '../../../providers/transactions_provider.dart';
 import '../../custom_widgets/transactions_list.dart';
 import '../../model/ol_fls/transaction.dart';
+import '../../newdfiles/dboperations/transaction_object.dart';
 // import '../../model/transaction.dart';
 
 class SearchPage extends ConsumerStatefulWidget {
@@ -14,7 +15,7 @@ class SearchPage extends ConsumerStatefulWidget {
 }
 
 class _SearchPage extends ConsumerState<SearchPage> {
-  Future<List<Transaction>>? futureTransactions;
+  Future<List<TransactionRM>>? futureTransactions;
   List<String> suggetions = [""];
   String? labelFilter;
 
@@ -32,7 +33,7 @@ class _SearchPage extends ConsumerState<SearchPage> {
               .map((f) => f.value == true ? f.key : "")
               .toList(),
           label: labelFilter,
-          bankAccounts: filterAccountList);
+          bankAccounts: filterAccountList) as Future<List<TransactionRM>>?;
     });
   }
 
@@ -84,7 +85,7 @@ class _SearchPage extends ConsumerState<SearchPage> {
                     )),
                 Container(
                     alignment: Alignment.centerLeft,
-                    child:const Text("SEARCH FOR:")),
+                    child: const Text("SEARCH FOR:")),
                 Row(children: [
                   Expanded(
                     child: SingleChildScrollView(
@@ -94,7 +95,11 @@ class _SearchPage extends ConsumerState<SearchPage> {
                             padding: const EdgeInsets.symmetric(horizontal: 10),
                             child: FilterChip(
                               showCheckmark: false,
-                              label: Text("Income", style: TextStyle(color: filterType["IN"]! ? Colors.white : Colors.blue.shade700)),
+                              label: Text("Income",
+                                  style: TextStyle(
+                                      color: filterType["IN"]!
+                                          ? Colors.white
+                                          : Colors.blue.shade700)),
                               selected: filterType["IN"] ?? false,
                               backgroundColor: Colors.white,
                               selectedColor: Colors.blue.shade700,
@@ -120,7 +125,11 @@ class _SearchPage extends ConsumerState<SearchPage> {
                             padding: const EdgeInsets.symmetric(horizontal: 10),
                             child: FilterChip(
                               showCheckmark: false,
-                              label: Text("Outcome", style: TextStyle(color: filterType["OUT"]! ? Colors.white : Colors.blue.shade700)),
+                              label: Text("Outcome",
+                                  style: TextStyle(
+                                      color: filterType["OUT"]!
+                                          ? Colors.white
+                                          : Colors.blue.shade700)),
                               selected: filterType["OUT"] ?? false,
                               backgroundColor: Colors.white,
                               selectedColor: Colors.blue.shade700,
@@ -146,7 +155,11 @@ class _SearchPage extends ConsumerState<SearchPage> {
                             padding: const EdgeInsets.symmetric(horizontal: 10),
                             child: FilterChip(
                               showCheckmark: false,
-                              label: Text("Transfer", style: TextStyle(color: filterType["TR"]! ? Colors.white : Colors.blue.shade700)),
+                              label: Text("Transfer",
+                                  style: TextStyle(
+                                      color: filterType["TR"]!
+                                          ? Colors.white
+                                          : Colors.blue.shade700)),
                               selected: filterType["TR"] ?? false,
                               backgroundColor: Colors.white,
                               selectedColor: Colors.blue.shade700,
@@ -173,8 +186,7 @@ class _SearchPage extends ConsumerState<SearchPage> {
                 ]),
                 Container(
                     alignment: Alignment.centerLeft,
-                    child:
-                        const Text("SEARCH IN:")),
+                    child: const Text("SEARCH IN:")),
                 Row(
                   children: [
                     Expanded(
@@ -188,7 +200,12 @@ class _SearchPage extends ConsumerState<SearchPage> {
                                     padding: const EdgeInsets.symmetric(
                                         horizontal: 10),
                                     child: FilterChip(
-                                        label: Text(account.name, style: TextStyle(color: filterAccountList[account?.id]! ? Colors.white : Colors.blue.shade700)),
+                                        label: Text(account.name,
+                                            style: TextStyle(
+                                                color: filterAccountList[
+                                                        account?.id]!
+                                                    ? Colors.white
+                                                    : Colors.blue.shade700)),
                                         showCheckmark: false,
                                         selected:
                                             filterAccountList[account.id] ??
@@ -228,30 +245,30 @@ class _SearchPage extends ConsumerState<SearchPage> {
                     )
                   ],
                 ),
-                Expanded(
-                  child: FutureBuilder(
-                      future: futureTransactions,
-                      builder: (context, snapshot) {
-                        if (snapshot.hasData &&
-                            snapshot.data != null &&
-                            snapshot.connectionState == ConnectionState.done) {
-                          return TransactionsList(transactions: snapshot.data!);
-                        } else if (snapshot.hasError) {
-                          return Text(
-                              'Something went wrong: ${snapshot.error}');
-                        } else {
-                          if (snapshot.connectionState ==
-                              ConnectionState.waiting) {
-                            return Transform.scale(
-                              scale: 0.5,
-                              child: const CircularProgressIndicator(),
-                            );
-                          } else {
-                            return const Text("Search for a transaction");
-                          }
-                        }
-                      }),
-                )
+                // Expanded(
+                //   child: FutureBuilder(
+                //       future: futureTransactions,
+                //       builder: (context, snapshot) {
+                //         if (snapshot.hasData &&
+                //             snapshot.data != null &&
+                //             snapshot.connectionState == ConnectionState.done) {
+                //           return TransactionsList(transactions: snapshot.data!);
+                //         } else if (snapshot.hasError) {
+                //           return Text(
+                //               'Something went wrong: ${snapshot.error}');
+                //         } else {
+                //           if (snapshot.connectionState ==
+                //               ConnectionState.waiting) {
+                //             return Transform.scale(
+                //               scale: 0.5,
+                //               child: const CircularProgressIndicator(),
+                //             );
+                //           } else {
+                //             return const Text("Search for a transaction");
+                //           }
+                //         }
+                //       }),
+                // )
               ],
             )));
   }

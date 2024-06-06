@@ -13,20 +13,28 @@ class AddingTransactionblocLoading extends DboperationsblocState {}
 class AddingBankAccountblocLoading extends DboperationsblocState {}
 
 class AddingCategoryblocLoading extends DboperationsblocState {}
+
 // success
 class AddingTransactionblocSuccess extends DboperationsblocState {
-  final Map result;
+  var result;
+  var transactionsOboject;
 
-  AddingTransactionblocSuccess(this.result);
+  AddingTransactionblocSuccess(this.result,this.transactionsOboject);
 }
+// class TransactionFblocSuccess extends DboperationsblocState {
+//   final List<TransactionRM>? result;
+
+//   TransactionFblocSuccess(this.result);
+// }
 
 class AddingBankAccountblocSuccess extends DboperationsblocState {
   final Map result;
 
   AddingBankAccountblocSuccess(this.result);
 }
+
 class AddingCategoryblocSuccess extends DboperationsblocState {
-  final Map result;
+  var result;
 
   AddingCategoryblocSuccess(this.result);
 }
@@ -43,6 +51,7 @@ class AddingBankAccountlocFailure extends DboperationsblocState {
 
   AddingBankAccountlocFailure(this.error);
 }
+
 class AddingCategoryBlocFailure extends DboperationsblocState {
   final String error;
 

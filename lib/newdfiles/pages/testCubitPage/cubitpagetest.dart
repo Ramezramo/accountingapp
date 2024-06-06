@@ -3,7 +3,8 @@ import 'package:accounting_app_last/newdfiles/dboperations/financialaccount.dart
 import 'package:accounting_app_last/newdfiles/dboperations/transaction_object.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../bloc/cubit/dboperationsbloc_cubit.dart';
+import '../../bloc/cubit/cubit/general/dboperationsbloc_cubit.dart';
+// import '../../bloc/cubit/dboperationsbloc_cubit.dart';
 import '../../dboperations/DealWithDataBase.dart';
 // import 'dboperationsbloc_cubit.dart';
 

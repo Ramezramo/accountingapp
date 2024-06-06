@@ -20,24 +20,24 @@ class _ListTabState extends ConsumerState<ListTab> with Functions {
     final asyncTransactions = ref.watch(transactionsProvider);
 
     return Container(
-      child: asyncTransactions.when(
-        data: (transactions) {
-          return TransactionsList(
-            padding: const EdgeInsets.symmetric(vertical: 16.0),
-            transactions: transactions,
-          );
-        },
-        loading: () {
-          return Container(
-            color: Colors.white,
-          );
-        },
-        error: (error, stackTrace) {
-          return Center(
-            child: Text(stackTrace.toString()),
-          );
-        },
-      ),
+      // child: asyncTransactions.when(
+      //   data: (transactions) {
+      //     return TransactionsList(
+      //       padding: const EdgeInsets.symmetric(vertical: 16.0),
+      //       transactions: transactions,
+      //     );
+      //   },
+      //   loading: () {
+      //     return Container(
+      //       color: Colors.white,
+      //     );
+      //   },
+      //   error: (error, stackTrace) {
+      //     return Center(
+      //       child: Text(stackTrace.toString()),
+      //     );
+      //   },
+      // ),
     );
   }
 }

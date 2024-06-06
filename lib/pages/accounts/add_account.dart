@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../newdfiles/bloc/cubit/dboperationsbloc_cubit.dart';
+// import '../../newdfiles/bloc/cubit/dboperationsbloc_cubit.dart';
+import '../../newdfiles/bloc/cubit/cubit/bankAccount/cubit/bank_account_cubit.dart';
+import '../../newdfiles/bloc/cubit/cubit/general/dboperationsbloc_cubit.dart';
 import '../../newdfiles/dboperations/financialaccount.dart';
 import '../../providers/accounts_provider.dart';
 import '../../constants/constants.dart';
@@ -459,7 +461,7 @@ double startingValue = text.isEmpty ? 0 : double.parse(text);
                         mainAccount: ref.read(accountMainSwitchProvider),
                       );
                       context
-                          .read<DboperationsblocCubit>()
+                          .read<BankAccountCubit>()
                           .insertBankAccount(account);
 
                       Navigator.of(context).pop();

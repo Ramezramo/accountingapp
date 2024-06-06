@@ -4,7 +4,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../constants/constants.dart';
 import '../../constants/functions.dart';
 import '../../constants/style.dart';
-import '../../newdfiles/bloc/cubit/dboperationsbloc_cubit.dart';
+// import '../../newdfiles/bloc/cubit/dboperationsbloc_cubit.dart';
+import '../../newdfiles/bloc/cubit/cubit/general/dboperationsbloc_cubit.dart';
 import '../../newdfiles/dboperations/categoryobject.dart';
 import '../../providers/categories_provider.dart';
 

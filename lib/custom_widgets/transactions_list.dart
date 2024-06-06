@@ -1,4 +1,4 @@
-import 'package:accounting_app_last/model/ol_fls/transaction.dart';
+import 'package:accounting_app_last/newdfiles/dboperations/transaction_object.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -6,6 +6,7 @@ import '../constants/constants.dart';
 import '../constants/functions.dart';
 import '../constants/style.dart';
 // import '../model/transaction.dart';
+import '../model/ol_fls/transaction.dart';
 import '../providers/currency_provider.dart';
 import '../providers/transactions_provider.dart';
 import '../utils/date_helper.dart';
@@ -18,16 +19,16 @@ class TransactionsList extends StatefulWidget {
     this.padding,
   });
 
-  final List<Transaction> transactions;
+  final List<TransactionRM> transactions;
   final EdgeInsetsGeometry? padding;
 
   @override
   State<TransactionsList> createState() => _TransactionsListState();
-} 
+}
 
 class _TransactionsListState extends State<TransactionsList> with Functions {
   Map<String, double> totals = {};
-  List<Transaction> get transactions => widget.transactions;
+  List<TransactionRM> get transactions => widget.transactions;
 
   @override
   void initState() {
@@ -46,15 +47,15 @@ class _TransactionsListState extends State<TransactionsList> with Functions {
     for (var transaction in transactions) {
       String date = transaction.date.toYMD();
       if (totals.containsKey(date)) {
-        if (transaction.type == TransactionType.expense) {
+        if (transaction.type == "expenses") {
           totals[date] = totals[date]! - transaction.amount.toDouble();
-        } else if (transaction.type == TransactionType.income) {
+        } else if (transaction.type == "income") {
           totals[date] = totals[date]! + transaction.amount.toDouble();
         }
       } else {
-        if (transaction.type == TransactionType.expense) {
+        if (transaction.type == "expenses") {
           totals.putIfAbsent(date, () => -transaction.amount.toDouble());
-        } else if (transaction.type == TransactionType.income) {
+        } else if (transaction.type == "income") {
           totals.putIfAbsent(date, () => transaction.amount.toDouble());
         }
       }
@@ -166,14 +167,14 @@ class TransactionRow extends ConsumerWidget with Functions {
   const TransactionRow(this.transaction,
       {this.first = false, this.last = false, super.key});
 
-  final Transaction transaction;
+  final TransactionRM transaction;
   final bool first;
   final bool last;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final currencyState = ref.watch(currencyStateNotifier);
-    
+
     return Column(
       children: [
         Material(
@@ -242,13 +243,13 @@ class TransactionRow extends ConsumerWidget with Functions {
                                 children: [
                                   TextSpan(
                                     text:
-                                        '${transaction.type == TransactionType.expense ? "-" : ""}${numToCurrency(transaction.amount)}',
+                                        '${transaction.type == TransactionTypeRM.expense ? "-" : ""}${numToCurrency(transaction.amount)}',
                                     style: Theme.of(context)
                                         .textTheme
                                         .labelLarge!
                                         .copyWith(
                                             color:
-                                                typeToColor(transaction.type)),
+                                                typeToColor(TransactionType.expense)),
                                   ),
                                   TextSpan(
                                     text: currencyState.selectedCurrency.symbol,
@@ -257,7 +258,7 @@ class TransactionRow extends ConsumerWidget with Functions {
                                         .labelSmall!
                                         .copyWith(
                                             color:
-                                                typeToColor(transaction.type)),
+                                                typeToColor(TransactionType.expense)),
                                   ),
                                 ],
                               ),

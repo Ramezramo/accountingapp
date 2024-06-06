@@ -1,4 +1,4 @@
-import 'package:accounting_app_last/newdfiles/bloc/cubit/dboperationsbloc_cubit.dart';
+// import 'package:accounting_app_last/newdfiles/bloc/cubit/dboperationsbloc_cubit.dart';
 import 'package:fl_chart/src/chart/base/axis_chart/axis_chart_data.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -12,6 +12,9 @@ import '../custom_widgets/line_chart.dart';
 import '../custom_widgets/transactions_list.dart';
 // import '../model/bank_account.dart';
 import '../model/ol_fls/bank_account.dart';
+import '../newdfiles/bloc/cubit/cubit/bankAccount/cubit/bank_account_cubit.dart';
+import '../newdfiles/bloc/cubit/cubit/general/dboperationsbloc_cubit.dart';
+import '../newdfiles/bloc/cubit/transactionFetcher/cubit/trans_fetcher_cubit.dart';
 import '../newdfiles/dboperations/DealWithDataBase.dart';
 import '../newdfiles/dboperations/financialaccount.dart';
 import '../providers/accounts_provider.dart';
@@ -28,6 +31,32 @@ class CalculateIncomeDashboard extends ConsumerStatefulWidget {
 
 class _HomePageState extends ConsumerState<CalculateIncomeDashboard>
     with Functions {
+  List<BankAccountRM> accounts = [];
+  bool isLoading = true;
+  String? error;
+
+  @override
+  void initState() {
+    super.initState();
+    fetchAccounts();
+  }
+
+  Future<void> fetchAccounts() async {
+    try {
+      var accountsList = await SqlDb.instance.selectAllAccounts();
+      setState(() {
+        accounts = accountsList!;
+        isLoading = false;
+        error = null;
+      });
+    } catch (e) {
+      setState(() {
+        error = e.toString();
+        isLoading = false;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final accountList = ref.watch(accountsProvider);
@@ -86,79 +115,32 @@ class _HomePageState extends ConsumerState<CalculateIncomeDashboard>
                     style: Theme.of(context).textTheme.titleLarge,
                   ),
                 ),
-                SizedBox(
-                  height: 86.0,
-                  child: accountList.when(
-                    data: (accounts) => ListView.builder(
-                      itemCount: accounts.length + 1,
-                      shrinkWrap: true,
-                      padding: const EdgeInsets.only(left: 16.0, right: 16.0),
-                      physics: const BouncingScrollPhysics(),
-                      scrollDirection: Axis.horizontal,
-                      itemBuilder: (context, i) {
-                        if (i == accounts.length) {
-                          return Padding(
-                            padding: const EdgeInsets.fromLTRB(0, 4, 0, 16),
-                            child: Container(
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(8),
-                                boxShadow: [defaultShadow],
-                              ),
-                              child: TextButton.icon(
-                                style: ButtonStyle(
-                                  maximumSize: MaterialStateProperty.all(
-                                      const Size(130, 48)),
-                                  backgroundColor: MaterialStateProperty.all(
-                                      Theme.of(context).colorScheme.surface),
-                                  shape: MaterialStateProperty.all(
-                                    RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(8.0),
-                                    ),
-                                  ),
-                                ),
-                                icon: Container(
-                                  decoration: const BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    color: blue5,
-                                  ),
-                                  child: const Padding(
-                                    padding: EdgeInsets.all(5.0),
-                                    child: Icon(
-                                      Icons.add_rounded,
-                                      size: 24.0,
-                                      color: white,
-                                    ),
-                                  ),
-                                ),
-                                label: Text(
-                                  "New Account",
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .bodyLarge!
-                                      .copyWith(
-                                        color: Theme.of(context)
-                                            .colorScheme
-                                            .secondary,
-                                      ),
-                                  maxLines: 2,
-                                ),
-                                onPressed: () {
-                                  ref.read(accountsProvider.notifier).reset();
-                                  Navigator.of(context)
-                                      .pushNamed('/add-account');
-                                },
-                              ),
-                            ),
-                          );
-                        } else {
-                          BankAccountRM account = accounts[i];
-                          return AccountsSum(account: account);
-                        }
-                      },
-                    ),
-                    loading: () => const SizedBox(),
-                    error: (err, stack) => Text('Error: $err'),
-                  ),
+                BlocConsumer<BankAccountCubit, BankAccountState>(
+                  listener: (context, state) async {
+                    // listener code if needed
+                    if (state is AddingBankAccountblocSuccess1) {
+                      print(state.result);
+                    } else if (state is AddingBankAccountlocFailure1) {
+                      print('Error: ${state.error}');
+                    }
+                  },
+                  builder: (context, state) {
+                    if (state is AddingBankAccountblocLoading1) {
+                      // corrected state class name
+                      return const CircularProgressIndicator();
+                    } else if (state is AddingBankAccountblocSuccess1) {
+                      // corrected state class name
+                      final accounts = state.result;
+                      print(accounts);
+                      return firstPageAccountsView(
+                          accounts: accounts!, ref: ref);
+                    } else if (state is AddingBankAccountlocFailure1) {
+                      // corrected state class name
+                      return Text('Error: ${state.error}',
+                          style: const TextStyle(color: Colors.red));
+                    }
+                    return Container();
+                  },
                 ),
                 Align(
                   alignment: Alignment.centerLeft,
@@ -170,14 +152,60 @@ class _HomePageState extends ConsumerState<CalculateIncomeDashboard>
                     ),
                   ),
                 ),
-                lastTransactions.when(
-                  data: (transactions) =>
-                      TransactionsList(transactions: transactions),
-                  loading: () => const SizedBox(),
-                  error: (err, stack) => Text('Error: $err'),
-                ),
+
+                          BlocConsumer<DboperationsblocCubit, DboperationsblocState>(
+            listener: (context, state) {
+              // TODO: implement listener
+              print(state);
+            },
+            builder: (context, state) {
+              if (state is AddingTransactionblocLoading) {
+                return const CircularProgressIndicator();
+              } else if (state is AddingTransactionblocSuccess) {
+
+                      final transaCtions = state.transactionsOboject;
+                      print(transaCtions);
+                      // there is an error in getting the state from here
+                      // it function is not working
+                      return TransactionsList(transactions: transaCtions!);
+              } else if (state is AddingTransactionblocFailure) {
+                return Text('Error: ${state.error}',
+                    style: const TextStyle(color: Colors.red));
+              }
+              return Container();
+            },
+          ),
+                // BlocConsumer<TransFetcherCubit, TransFetcherState>(
+                //   listener: (context, state) async {
+                //     // listener code if needed
+                //     if (state is TransactionFblocSuccess) {
+                //       print(state.result);
+                //     } else if (state is TransactionFlocFailure) {
+                //       print('Error: ${state.error}');
+                //     }
+                //   },
+                //   builder: (context, state) {
+                //     if (state is AddingTransactionblocLoading) {
+                //       // corrected state class name
+                //       return const CircularProgressIndicator();
+                //     } else if (state is TransactionFblocSuccess) {
+                //       // corrected state class name
+                //       final transaCtions = state.result;
+                //       print(transaCtions);
+                //       // there is an error in getting the state from here
+                //       // it function is not working
+                //       return TransactionsList(transactions: transaCtions!);
+                //     } else if (state is TransactionFlocFailure) {
+                //       // corrected state class name
+                //       return Text('Error: ${state.error}',
+                //           style: const TextStyle(color: Colors.red));
+                //     }
+                //     return Container();
+                //   },
+                // ),
+                 
                 const SizedBox(height: 28),
-                BudgetsSection()
+                const BudgetsSection()
               ],
             ),
           ),
@@ -338,6 +366,84 @@ class _HomePageState extends ConsumerState<CalculateIncomeDashboard>
         ),
         const SizedBox(height: 22),
       ],
+    );
+  }
+}
+
+class firstPageAccountsView extends StatelessWidget {
+  const firstPageAccountsView({
+    super.key,
+    required this.accounts,
+    required this.ref,
+  });
+
+  final List<BankAccountRM> accounts;
+  final WidgetRef ref;
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: 86.0,
+      child: ListView.builder(
+        itemCount: accounts.length + 1,
+        shrinkWrap: true,
+        padding: const EdgeInsets.only(left: 16.0, right: 16.0),
+        physics: const BouncingScrollPhysics(),
+        scrollDirection: Axis.horizontal,
+        itemBuilder: (context, i) {
+          if (i == accounts.length) {
+            return Padding(
+              padding: const EdgeInsets.fromLTRB(0, 4, 0, 16),
+              child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(8),
+                  boxShadow: [defaultShadow],
+                ),
+                child: TextButton.icon(
+                  style: ButtonStyle(
+                    maximumSize: MaterialStateProperty.all(const Size(130, 48)),
+                    backgroundColor: MaterialStateProperty.all(
+                        Theme.of(context).colorScheme.surface),
+                    shape: MaterialStateProperty.all(
+                      RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8.0),
+                      ),
+                    ),
+                  ),
+                  icon: Container(
+                    decoration: const BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: blue5,
+                    ),
+                    child: const Padding(
+                      padding: EdgeInsets.all(5.0),
+                      child: Icon(
+                        Icons.add_rounded,
+                        size: 24.0,
+                        color: white,
+                      ),
+                    ),
+                  ),
+                  label: Text(
+                    "New Account",
+                    style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                          color: Theme.of(context).colorScheme.secondary,
+                        ),
+                    maxLines: 2,
+                  ),
+                  onPressed: () {
+                    ref.read(accountsProvider.notifier).reset();
+                    Navigator.of(context).pushNamed('/add-account');
+                  },
+                ),
+              ),
+            );
+          } else {
+            BankAccountRM account = accounts[i];
+            return AccountsSum(account: account);
+          }
+        },
+      ),
     );
   }
 }

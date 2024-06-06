@@ -61,12 +61,12 @@ class _AccountPage extends ConsumerState<AccountPage> with Functions {
                 ],
               ),
             ),
-            Container(
-                padding: const EdgeInsets.only(top: 40.0),
-                child: TransactionsList(
-                    transactions: transactions
-                        .map((json) => Transaction.fromJson(json))
-                        .toList())),
+            // Container(
+            //     padding: const EdgeInsets.only(top: 40.0),
+            //     child: TransactionsList(
+            //         transactions: transactions
+            //             .map((json) => Transaction.fromJson(json))
+            //             .toList())),
           ],
         ),
       ),
